@@ -25,5 +25,7 @@ Event.prototype.error = function(data){
  * Use $.proxy to fix obj as the scope for handler f
  */
 Event.prototype.bind = function(tag, f, obj){
+	//Currently accepting single handler per tag, unbind older
+	$(document).unbind(tag);
 	$(document).bind(tag, $.proxy(f, obj));
 }
