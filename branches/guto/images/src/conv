@@ -1,0 +1,19 @@
+#!/bin/sh
+
+in_file=$1
+out_file=$2
+
+if [ -z "$in_file" -o -z "$out_file" ]; then
+    echo "USAGE: $0 in_file.spr out_file.png"
+    exit 1
+fi
+
+[ -d tmp ] && rm -rf tmp
+mkdir tmp
+
+./spr2bmp $in_file tmp/img_
+montage -tile 16 -geometry +0+0 tmp/*.bmp tmp.png
+convert tmp.png -transparent '#00ff00' $out_file
+
+rm -rf tmp
+rm -f tmp.png

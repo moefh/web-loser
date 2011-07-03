@@ -1,0 +1,44 @@
+.centerBox {
+	position: fixed;
+	width: 640px;
+	height: 480px;
+	background: transparent;
+	top: 50%;
+	left: 50%;
+	margin-left: -320px;
+	margin-top: -240px;
+
+}
+#overlay {
+	z-index: 1;
+}
+#options {
+	position: absolute;
+	bottom: -1px;
+	width: 641px;
+	background: black;
+	opacity: 0.5;
+}
+#options span {
+	padding-left: 10px;
+}
+#screen {
+	border: 1px solid #000;
+	z-index: 0;
+}
+#debug {
+	display: none;
+	width: 800;
+	height: 190;
+	border: 1px solid #000;
+	font-family: monospace;
+	overflow: auto;
+	margin-top: 5px;
+}
+body {
+	background: black;
+	color: white;
+	font: arial;
+	font-family: verdana, sans-serif;
+	font-size: 12px;
+}
