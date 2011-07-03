@@ -10,14 +10,14 @@ function Screen(lw, lh, canvas)
     this.w = canvas.width;
     this.h = canvas.height;
 
-    this.logical_w = lw;
-    this.logical_h = lh;    
+    this.logical_w = Math.round(lw);
+    this.logical_h = Math.round(lh);
 
-    this.scale_x = this.w / lw;
-    this.scale_y = this.h / lh;
+    this.scale_x = this.w / this.logical_w;
+    this.scale_y = this.h / this.logical_h;
     
-    this.tile_w = Math.round(64 * this.scale_x);
-    this.tile_h = Math.round(64 * this.scale_y);
+    this.tile_w = 64 * this.scale_x;
+    this.tile_h = 64 * this.scale_y;
 }
 
 Screen.prototype.show_message = function(x, y, msg) {
@@ -35,8 +35,8 @@ Screen.prototype.draw_map_bg = function(map) {
     var tile_start_y = Math.floor(this.y / 64);
     for (var y = 0; y < (this.logical_h/64)+1; y++) {
         for (var x = 0; x < (this.logical_w/64)+1; x++) {
-            var pos_x = Math.round((64*x - this.x%64) * this.scale_x);
-            var pos_y = Math.round((64*y - this.y%64) * this.scale_y);
+            var pos_x = (64*x - this.x%64) * this.scale_x;
+            var pos_y = (64*y - this.y%64) * this.scale_y;
             
             var tile_id = map.bg_tile(tile_start_x + x, tile_start_y + y);
             if (tile_id != 0xffff) {
@@ -54,8 +54,8 @@ Screen.prototype.draw_map_fg = function(map) {
     var tile_start_y = Math.floor(this.y / 64);
     for (var y = 0; y < (this.h/this.tile_h)+1; y++) {
         for (var x = 0; x < (this.w/this.tile_w)+1; x++) {
-            var pos_x = Math.round((64*x - this.x%64) * this.scale_x);
-            var pos_y = Math.round((64*y - this.y%64) * this.scale_y);
+            var pos_x = (64*x - this.x%64) * this.scale_x;
+            var pos_y = (64*y - this.y%64) * this.scale_y;
 
             var tile_id = map.fg_tile(tile_start_x + x, tile_start_y + y);
             if (tile_id != 0xffff) {
@@ -71,8 +71,8 @@ Screen.prototype.draw_frame = function(image, index, frame_w, frame_h, x, y) {
     var img_x = index % 16;
     var img_y = Math.floor(index / 16);
     this.ctx.drawImage(image, img_x*frame_w, img_y*frame_h, frame_w, frame_h,
-                       Math.round(x*this.scale_x), Math.round(y*this.scale_y),
-                       Math.round(frame_w*this.scale_x), Math.round(frame_h*this.scale_y));
+                       x*this.scale_x, y*this.scale_y,
+                       frame_w*this.scale_x, frame_h*this.scale_y);
 };
 
 Screen.prototype.draw_npc = function(images, npc) {

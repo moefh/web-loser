@@ -14,7 +14,7 @@ Images.prototype.table_loaded = function(table) {
     return true;
 };
 
-Images.prototype.load = function(table, ok_func, err_func) {
+Images.prototype.load = function(table, events, tag) {
     var self = this;
     var called_err_func = false;
     
@@ -26,12 +26,13 @@ Images.prototype.load = function(table, ok_func, err_func) {
             img.onload = function() {
                 self.images[name] = img;
                 if (self.table_loaded(table))
-                    ok_func();
+                    events.trigger(tag);
             };
             img.onerror = function() {
-                if (err_func && ! called_err_func) {
-                    err_func(url);
-          called_err_func = true;
+                var errMsg = "couldn't load image " + url;
+                if (! called_err_func) {
+                    events.error(errMsg);
+                    called_err_func = true;
                 }
             };
             img.src = url;

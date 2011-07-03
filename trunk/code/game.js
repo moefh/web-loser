@@ -8,26 +8,59 @@ var game;
 function Game() {
     this.player = null;
     this.npcs = null;
+    this.next_npc_id = 0;
     this.map = null;
     this.updater_id = null;
-    this.next_npc_id = 0;
-    
+    this.viewport = {};
+ 
+    var screen_size = document.getElementById('screen_size');
+    if (screen_size) {
+        var size = /^(\d+)x(\d+)$/.exec(screen_size.value);
+        this.setViewport(size[1], size[2]);
+    } else
+        this.setViewport($(window).width(), $(window).height());
+    this.resolutionRatio = 1/2;
+   
     this.collision = new Collision();
     this.keyboard = new Keyboard();
-    this.screen = new Screen(320, 240, document.getElementById('screen'));
+    this.screen = new Screen(this.viewport.width * this.resolutionRatio, this.viewport.height * this.resolutionRatio, document.getElementById('screen'));
     this.images = new Images();
     
+    var errTag = 'ERR';
+    this.evt = new Event(errTag, this.error, this);
+
     var self = this;
     
     this.screen.show_message(10, 10, "Loading images...");
-    this.images.load(images_table,
-                     function() {
-                         self.reset();
-                     },
-                     function(url) {
-                         self.screen.show_message(10, 10, "Error loading image '" + url + "'");
-                     });
+
+    var loadTag = 'IMG_LOADED';
+    this.evt.bind(loadTag, self.reset, self);
+    this.images.load(images_table, self.evt, loadTag);
 }
+
+Game.prototype.setViewport = function(w, h){
+    this.viewport.width = w;
+    this.viewport.height = h;
+
+    // Prevent the browser from scaling the images twice (?). This
+    // seems to improve image quality on chrome in some circumstances
+    var canvas = document.getElementById('screen');
+    canvas.width = Math.round(w);
+    canvas.height = Math.round(h);
+
+    $('.centerBox').css({
+	'width': w,
+	'height': h,
+	'marginLeft': -w / 2,
+	'marginTop': -h / 2
+    });
+};
+
+Game.prototype.error = function(e, data){
+    var errMsg = 'Error: ' + data;
+    this.screen.show_message(10,10, errMsg);
+    console.log(errMsg);
+};
 
 Game.prototype.debug = function(str, clear) {
     var el = document.getElementById("debug");
@@ -52,7 +85,6 @@ Game.prototype.reset = function() {
     
     this.screen.show_message(10, 10, "Loading characters...");
     this.npcs = {};
-
     var player_npc = this.add_npc(npc_def[sel_char],
                                   function() {
                                       self.player.calc_step(self);
@@ -62,13 +94,10 @@ Game.prototype.reset = function() {
 
     this.screen.show_message(10, 10, "Loading map...");
     this.map = new Map(sel_map);
-    this.map.load(this.images,
-                  function() {
-                      self.start();
-                  },
-                  function(msg) {
-                      self.screen.show_message(10, 10, "Error loading map:\n" + msg);
-                  });
+
+    var loadTag = 'MAP_LOADED';
+    this.evt.bind(loadTag, self.start, self);
+    this.map.load(this.images, self.evt, loadTag);
 };
 
 /**
@@ -121,6 +150,9 @@ Game.prototype.remove_npc = function(npc) {
     return false;
 };
 
+/*
+ * Start game after DOM is loaded
+ */
 $(document).ready( function() {
     game = new Game();
 });
