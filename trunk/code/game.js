@@ -42,12 +42,6 @@ Game.prototype.setViewport = function(w, h){
     this.viewport.width = w;
     this.viewport.height = h;
 
-    // Prevent the browser from scaling the images twice (?). This
-    // seems to improve image quality on chrome in some circumstances
-    var canvas = document.getElementById('screen');
-    canvas.width = Math.round(w);
-    canvas.height = Math.round(h);
-
     $('.centerBox').css({
 	'width': w,
 	'height': h,
