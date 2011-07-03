@@ -7,11 +7,14 @@ function Screen(lw, lh, canvas)
     this.x = 0;
     this.y = 0;
     
-    this.w = canvas.width;
-    this.h = canvas.height;
-
     this.logical_w = Math.round(lw);
     this.logical_h = Math.round(lh);
+
+    canvas.width = this.logical_w;
+    canvas.height = this.logical_h;
+
+    this.w = canvas.width;
+    this.h = canvas.height;
 
     this.scale_x = this.w / this.logical_w;
     this.scale_y = this.h / this.logical_h;
