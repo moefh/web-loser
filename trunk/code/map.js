@@ -21,24 +21,17 @@ function Map(name)
  * Load the map via XMLHttpRequest. The image required by the map (the
  * tileset) must be already loaded in the images object.
  */
-Map.prototype.load = function(images, ok_func, err_func) {
-    this.load_request(images, ok_func, err_func);
-};
-
-Map.prototype.load_request = function(images, ok_func, err_func) {
+Map.prototype.load = function(images, ok_func, err_func) { 
+    //this.load_request(images, ok_func, err_func);
     var self = this;
     var url = 'maps/' + this.name + '.js';
-    var req = new XMLHttpRequest();
-    req.open('GET', url, true);
-    req.onreadystatechange = function() {
-	if (req.readyState != 4) return;
-	if (req.status == 200) {
-	    self.load_parse(req.responseText, images, ok_func, err_func);
-	} else {
-	    err_func("Can't load map from '" + url + "': error " + req.status);
-	}
-    };
-    req.send(null);
+    $.getJSON(url,
+	      function(data) {
+		  self.load_parse(data, images, ok_func, err_func);
+	      })
+	.error(function(jqXHR, message, what) {
+	    err_func("Can't load map from '" + url + "': " + what);
+	});
 };
 
 /* Convert the w*h clip_data matrix containing the clipping data form
@@ -82,9 +75,8 @@ Map.prototype.get_spawn_points = function(clip_data) {
     return spawns;
 };
 
-Map.prototype.load_parse = function(data_text, images, ok_func, err_func) {
+Map.prototype.load_parse = function(data, images, ok_func, err_func) {
     try {
-	var data = eval('(' + data_text + ')');
 	if (data.tile_size[0] != 64|| data.tile_size[1] != 64)
 	    throw "invalid tile size";
 	if (data.size[0] <= 0 || data.size[1] <= 0)

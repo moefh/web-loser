@@ -21,7 +21,7 @@ function Screen(lw, lh, canvas)
 }
 
 Screen.prototype.show_message = function(x, y, msg) {
-    this.ctx.font = "16pt sans-serif";
+    this.ctx.font = "12pt sans-serif";
     this.ctx.textBaseline = "top";
     this.ctx.fillStyle = '#000000';
     this.ctx.fillRect(0, 0, this.w, this.h);
