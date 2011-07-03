@@ -23,8 +23,8 @@ function Player(npc, collision, keyboard)
 {
     this.state = PLAYER_ST_JUMP_END;
     this.dir = DIR_RIGHT;
-    this.x = 100;
-    this.y = 100;
+    this.x = 0;
+    this.y = 0;
     this.dx = 0;
     this.dy = 0;
     this.frame = 0;
