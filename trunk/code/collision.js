@@ -134,3 +134,11 @@ Collision.prototype.calc_movement = function(map, x, y, w, h, dx, dy)
 	return delta;
     return null;
 };
+
+Collision.prototype.check_collision = function(map, x, y, w, h) {
+    return (map.point_is_blocked(x, y)
+	    || map.point_is_blocked(x+w, y)
+	    || map.point_is_blocked(x, y+h)
+	    || map.point_is_blocked(x+w, y+h));
+};
+

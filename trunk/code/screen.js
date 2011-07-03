@@ -75,25 +75,33 @@ Screen.prototype.draw_frame = function(image, index, frame_w, frame_h, x, y) {
 		       Math.round(frame_w*this.scale_x), Math.round(frame_h*this.scale_y));
 };
 
-Screen.prototype.draw_npcs = function(images, npcs) {
-    for (var i = 0; i < npcs.length; i++) {
-	var npc = npcs[i];
-	var def = npc.def;
-	// TODO: check if it's on screen (no need to draw otherwise)
-	this.draw_frame(images.get_image(def.image), npc.frame, def.w, def.h, npc.img_x - this.x, npc.img_y - this.y);
-    }
+Screen.prototype.draw_npc = function(images, npc) {
+    var def = npc.def;
+    var x = npc.get_img_x() - this.x;
+    var y = npc.get_img_y() - this.y;
+    if (x > -def.w && y > -def.h && x < this.w && y < this.h)
+	this.draw_frame(images.get_image(def.image), npc.frame, def.w, def.h, x, y);
 };
 
-Screen.prototype.draw = function(images, map, npcs, follow_npc_id) {
-    // change the screen position to follow a NPC if necessary
-    if (follow_npc_id != null) {
-	var npc = npcs[follow_npc_id];
-	if (this.x > npc.x - 100) this.x = npc.x - 100;
-	if (this.y > npc.y - 90) this.y = npc.y - 90;
-	if (this.x + this.logical_w < npc.x + npc.def.w + 100)
-	    this.x = npc.x + npc.def.w + 100 - this.logical_w;
-	if (this.y + this.logical_h < npc.y + npc.def.h + 100)
-	    this.y = npc.y + npc.def.h + 100 - this.logical_h;
+Screen.prototype.draw_npcs = function(images, npcs, follow_npc) {
+    for (var npc_id in npcs) {
+	var npc = npcs[npc_id];
+	if (npc != follow_npc)
+	    this.draw_npc(images, npc);
+    }
+    if (follow_npc != null)
+	this.draw_npc(images, follow_npc);
+};
+
+Screen.prototype.draw = function(images, map, npcs, follow_npc) {
+    // change the screen position to follow a NPC, if necessary
+    if (follow_npc != null) {
+	if (this.x > follow_npc.x - 100) this.x = follow_npc.x - 100;
+	if (this.y > follow_npc.y - 90) this.y = follow_npc.y - 90;
+	if (this.x + this.logical_w < follow_npc.x + follow_npc.def.w + 100)
+	    this.x = follow_npc.x + follow_npc.def.w + 100 - this.logical_w;
+	if (this.y + this.logical_h < follow_npc.y + follow_npc.def.h + 100)
+	    this.y = follow_npc.y + follow_npc.def.h + 100 - this.logical_h;
     }
 
     // limit the the screen position to be inside the map
@@ -106,6 +114,6 @@ Screen.prototype.draw = function(images, map, npcs, follow_npc_id) {
     
     // draw everything
     this.draw_map_bg(map);
-    this.draw_npcs(images, npcs);
+    this.draw_npcs(images, npcs, follow_npc);
     this.draw_map_fg(map);
 };

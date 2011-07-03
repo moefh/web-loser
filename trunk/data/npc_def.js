@@ -37,6 +37,18 @@ var npc_def = {
 	stand : [ 0 ],
 	jump : [ 1 ],
 	walk : [ 2, 3, 4, 5, 6, 7, 8, 9, 10, 11 ]
+    },
+
+    missile : {
+	image : "power",
+	w : 35,
+	h : 19,
+	clip : [ 0, 0, 33, 17 ],
+
+	mirror : 1,
+	stand : [ 0 ],
+	jump : [ 0 ],
+	walk : [ 0 ]
     }
 
 };

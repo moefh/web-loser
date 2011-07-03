@@ -1,4 +1,4 @@
-var images_table = [ 'castle', 'castle3', 'loserboy', 'stickman', 'punkman' ];
+var images_table = [ 'castle', 'castle3', 'loserboy', 'stickman', 'punkman', 'power' ];
 var game;
 
 /**
@@ -10,7 +10,9 @@ function Game() {
     this.npcs = null;
     this.map = null;
     this.updater_id = null;
+    this.next_npc_id = 0;
     
+    this.collision = new Collision();
     this.keyboard = new Keyboard();
     this.screen = new Screen(320, 240, document.getElementById('screen'));
     this.images = new Images();
@@ -44,14 +46,20 @@ Game.prototype.reset = function() {
 	this.updater_id = null;
     }
     
+    var self = this;
     var sel_map = document.getElementById("select_map").value;
     var sel_char = document.getElementById("select_char").value;
     
     this.screen.show_message(10, 10, "Loading characters...");
-    this.npcs = [ new NPC(npc_def[sel_char]) ];
-    this.player = new Player(this.npcs[0], new Collision(), this.keyboard);
-    
-    var self = this;
+    this.npcs = {};
+
+    var player_npc = this.add_npc(npc_def[sel_char],
+				  function() {
+				      self.player.calc_step(self);
+				      self.player.move(self.map);
+				  });
+    this.player = new Player(player_npc, this.collision, this.keyboard);
+
     this.screen.show_message(10, 10, "Loading map...");
     this.map = new Map(sel_map);
     this.map.load(this.images,
@@ -89,11 +97,28 @@ Game.prototype.step = function(n) {
     if (! n)
 	n = 1;
     for (var x = 0; x < n; x++) {
-	this.player.calc_step();
-	this.player.move(this.map);
-	this.screen.draw(this.images, this.map, this.npcs, 0);
+	for (var npc_id in this.npcs) {
+	    if (this.npcs[npc_id].step_func)
+		this.npcs[npc_id].step_func.call(this.npcs[npc_id], this);
+	}
+	this.screen.draw(this.images, this.map, this.npcs, this.player.npc);
 	this.keyboard.update();
     }
+};
+
+Game.prototype.add_npc = function(npc_def, handler) {
+    var npc = new NPC(npc_def, handler);
+    this.npcs[this.next_npc_id++] = npc;
+    return npc;
+};
+
+Game.prototype.remove_npc = function(npc) {
+    for (var npc_id in this.npcs)
+	if (this.npcs[npc_id] == npc) {
+	    delete this.npcs[npc_id];
+	    return true;
+	}
+    return false;
 };
 
 $(document).ready( function() {
