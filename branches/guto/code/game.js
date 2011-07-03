@@ -10,11 +10,16 @@ function Game() {
 	this.npcs = null;
 	this.map = null;
 	this.updater_id = null;
+	this.viewport = {};
 
 	this.keyboard = new Keyboard();
-	this.screen = new Screen(320, 240, document.getElementById('screen'));
+
+	this.setViewport($(window).width(), $(window).height());
+	this.resolutionRatio = 1/2;
+
+	this.screen = new Screen(this.viewport.width * this.resolutionRatio, this.viewport.height * this.resolutionRatio, document.getElementById('screen'));
 	this.images = new Images();
-	
+
 	var errTag = 'ERR';
 	this.evt = new Event(errTag, this.error, this);
 	
@@ -26,13 +31,22 @@ function Game() {
 	this.evt.bind(loadTag, self.reset, self);
 	this.images.load(images_table, self.evt, loadTag);
 }
+Game.prototype.setViewport = function(w, h){
+	this.viewport.width = w;
+	this.viewport.height = h;
 
-Game.prototype.error = function(e, data) {
+	$('.centerBox').css({
+		'width': w,
+		'height': h,
+		'marginLeft': -w / 2,
+		'marginTop': -h / 2
+	});
+};
+Game.prototype.error = function(e, data){
 	var errMsg = 'Error: ' + data;
 	this.screen.show_message(10,10, errMsg);
 	console.log(errMsg);
-}
-
+};
 Game.prototype.debug = function(str, clear) {
 	var el = document.getElementById("debug");
 	if (clear)

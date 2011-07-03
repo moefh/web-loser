@@ -7,7 +7,6 @@
 	left: 50%;
 	margin-left: -320px;
 	margin-top: -240px;
-
 }
 #overlay {
 	z-index: 1;
@@ -15,7 +14,7 @@
 #options {
 	position: absolute;
 	bottom: -1px;
-	width: 641px;
+	width: 100%;
 	background: black;
 	opacity: 0.5;
 }
