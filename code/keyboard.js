@@ -23,7 +23,7 @@ Keyboard.prototype.ev_keydown = function(e) {
     this.keys_down[e.keyCode] = true;
 
     key_rep++;
-    console.log("(" + key_rep + ") key pressed: " + e.keyCode, true);
+    //console.log("(" + key_rep + ") key pressed: " + e.keyCode, true);
     while (this.keys_pressed.length < e.keyCode) this.keys_pressed[this.keys_pressed.length] = false;
     this.keys_pressed[e.keyCode] = true;
 };
