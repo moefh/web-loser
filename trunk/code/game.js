@@ -71,7 +71,11 @@ Game.prototype.reset = function() {
  */
 Game.prototype.start = function() {
     this.player.load_map_parameters(this.map);
-    this.player.set_state(50, 100, DIR_RIGHT);
+    var spawn = this.map.spawn_points[0];
+    if (spawn)
+	this.player.set_state(64*spawn.x, 64*spawn.y, spawn.dir);
+    else
+	this.player.set_state(5, 5, DIR_RIGHT);
     var self = this;
     this.updater_id = setInterval( function() {
 	self.step()

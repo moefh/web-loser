@@ -14,6 +14,7 @@ function Map(name)
     this.bg = null;
     this.clip = null;
     this.clip_map = null;
+    this.spawn_points = null;
 }
 
 /**
@@ -63,6 +64,24 @@ Map.prototype.build_clipping_map = function(clip_data) {
     return map;
 };
 
+Map.prototype.get_spawn_points = function(clip_data) {
+    var spawns = [];
+    for (var y = 0; y < clip_data.length; y++)
+	for (var x = 0; x < clip_data[y].length; x++) {
+	    var data = clip_data[y][x];
+	    if (data == 16 || data == 17) {
+		console.log("got spawn point at ", x, y);
+		var spawn = {
+		    x : x,
+		    y : y,
+		    dir : (data == 16) ? DIR_RIGHT : DIR_LEFT
+		};
+		spawns[spawns.length] = spawn;
+	    }
+	}
+    return spawns;
+};
+
 Map.prototype.load_parse = function(data_text, images, ok_func, err_func) {
     try {
 	var data = eval('(' + data_text + ')');
@@ -98,9 +117,11 @@ Map.prototype.load_parse = function(data_text, images, ok_func, err_func) {
 	this.fg = data.fg_tiles;
 	this.clip = data.clipping;
 	this.clip_map = this.build_clipping_map(data.clipping);
+	this.spawn_points = this.get_spawn_points(data.clipping);
     }
     catch (e) {
 	err_func("error parsing map:\n" + e);
+	return;
     }
     ok_func();
 };
