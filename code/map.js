@@ -28,17 +28,16 @@ function test_load(name) {
  * Load the map via XMLHttpRequest. The image required by the map (the
  * tileset) must be already loaded in the images object.
  */
-Map.prototype.load = function(images, ok_func, err_func) { 
+Map.prototype.load = function(images, events, tag) { 
     //this.load_request(images, ok_func, err_func);
     var self = this;
     var url = 'maps/' + this.name + '.js';
     $.getJSON(url,
               function(data) {
-                  self.load_parse(data, images, ok_func, err_func);
-              })
-        .error(function(jqXHR, message, what) {
-            err_func("Can't load map from '" + url + "': " + what);
-        });
+                  self.load_parse(data, images, events, tag);
+              }).error(function(jqXHR, message, what) {
+                  events.error("Can't load map from '" + url + "': error " + what);
+              });
 };
 
 /* Convert the w*h clip_data matrix containing the clipping data form
@@ -70,7 +69,6 @@ Map.prototype.get_spawn_points = function(clip_data) {
         for (var x = 0; x < clip_data[y].length; x++) {
             var data = clip_data[y][x];
             if (data == 16 || data == 17) {
-                console.log("got spawn point at ", x, y);
                 var spawn = {
                     x : x,
                     y : y,
@@ -82,20 +80,21 @@ Map.prototype.get_spawn_points = function(clip_data) {
     return spawns;
 };
 
-Map.prototype.load_parse = function(data, images, ok_func, err_func) {
+Map.prototype.load_parse = function(data, images, events, tag) {
     try {
         if (data.tile_size[0] != 64|| data.tile_size[1] != 64)
             throw "invalid tile size";
         if (data.size[0] <= 0 || data.size[1] <= 0)
             throw "invalid map size";
         if (data.size[1] != data.bg_tiles.length)
-            throw "invalid bg tile length (" + data.size[0]*data.size[1] + " vs " + data.bg_tiles.length + ")";
+            throw "invalid bg tile length";
         if (data.size[1] != data.fg_tiles.length)
             throw "invalid fg tile length";
         if (data.size[1] != data.fg_tiles.length)
             throw "invalid clip tile length";
 
-        this.image = images.get_image(data.tileset);
+        var tileset = data.tileset.replace(/^([^:]+):.*$/, "$1");
+        this.image = images.get_image(tileset);
         if (! this.image)
             throw "invalid tileset: '" + data.tileset + "'";
 
@@ -119,10 +118,10 @@ Map.prototype.load_parse = function(data, images, ok_func, err_func) {
         this.spawn_points = this.get_spawn_points(data.clipping);
     }
     catch (e) {
-        err_func("error parsing map:\n" + e);
+        events.error("error parsing map:\n" + e);
         return;
     }
-    ok_func();
+    events.trigger(tag);
 };
 
 Map.prototype.get_image = function() {

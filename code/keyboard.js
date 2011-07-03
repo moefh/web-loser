@@ -14,8 +14,6 @@ function Keyboard() {
     document.onkeyup = function(ev) { self.ev_keyup(ev); };
 }
 
-var key_rep = 0;
-
 Keyboard.prototype.ev_keydown = function(e) {
     var e = window.event || e;
     if (e.keyCode > 256) return;
@@ -23,8 +21,7 @@ Keyboard.prototype.ev_keydown = function(e) {
     while (this.keys_down.length < e.keyCode) this.keys_down[this.keys_down.length] = false;
     this.keys_down[e.keyCode] = true;
 
-    key_rep++;
-    console.log("(" + key_rep + ") key pressed: " + e.keyCode, true);
+    //console.log("(" + key_rep + ") key pressed: " + e.keyCode, true);
     while (this.keys_pressed.length < e.keyCode) this.keys_pressed[this.keys_pressed.length] = false;
     this.keys_pressed[e.keyCode] = true;
 };
