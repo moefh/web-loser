@@ -2,6 +2,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #define MAP_MAGIC_0   0x0050414d
 #define MAP_MAGIC_1   0x0150414d
@@ -147,7 +148,7 @@ static int read_npc_dict(FILE *in, NPC_DICT **ret)
     npc_dict[i].npc = get_u16(in);
     len = get_string(in, npc_dict[i].name, sizeof(npc_dict[i].name));
     n_bytes += 3 + len;
-    printf("got dict entry: { %d, \"%s\" }\n", npc_dict[i].npc, npc_dict[i].name);
+    //printf("got dict entry: { %d, \"%s\" }\n", npc_dict[i].npc, npc_dict[i].name);
   }
   npc_dict[n_npcs].npc = -1;
   npc_dict[n_npcs].name[0] = '\0';
@@ -169,7 +170,7 @@ void conv_map_objects(FILE *in, FILE *out, NPC_DICT *dict)
 {
   int n_objs, i;
 
-  fprintf(out, "  objects: [\n");
+  fprintf(out, "  \"objects\" : [\n");
 
   n_objs = get_u32(in);
   for (i = 0; i < n_objs; i++) {
@@ -221,24 +222,25 @@ void conv_map_objects(FILE *in, FILE *out, NPC_DICT *dict)
 
     fprintf(out, "    {\n");
 
-    fprintf(out, "      npc: ");
+    fprintf(out, "      \"npc\" : ");
     write_string(out, find_npc(dict, npc_id));
-    fprintf(out, ", // %d\n", npc_id);
+    //fprintf(out, ", // %d\n", npc_id);
+    fprintf(out, ",\n");
 
     if (text[0] != '\0') {
-      fprintf(out, "      text: ");
+      fprintf(out, "      \"text\" : ");
       write_string(out, text);
       fprintf(out, ",\n");
     }
 
-    fprintf(out, "      x: %d,\n", x);
-    fprintf(out, "      y: %d,\n", y);
-    fprintf(out, "      dir: %d,\n", dir);
-    fprintf(out, "      respawn: %d,\n", respawn);
-    fprintf(out, "      level: %d,\n", level);
-    fprintf(out, "      duration: %d,\n", duration);
-    fprintf(out, "      target: %d,\n", target);
-    fprintf(out, "      vulnerability: %d\n", vulnerability);
+    fprintf(out, "      \"x\" : %d,\n", x);
+    fprintf(out, "      \"y\" : %d,\n", y);
+    fprintf(out, "      \"dir\" : %d,\n", dir);
+    fprintf(out, "      \"respawn\" : %d,\n", respawn);
+    fprintf(out, "      \"level\" : %d,\n", level);
+    fprintf(out, "      \"duration\" : %d,\n", duration);
+    fprintf(out, "      \"target\" : %d,\n", target);
+    fprintf(out, "      \"vulnerability\" : %d\n", vulnerability);
     
     fprintf(out, "    }");
     if (i != n_objs-1)
@@ -249,7 +251,7 @@ void conv_map_objects(FILE *in, FILE *out, NPC_DICT *dict)
   fprintf(out, "  ],\n\n");
 }
 
-void conv_map(FILE *in, FILE *out)
+void conv_map(FILE *in, FILE *out, char *src_name)
 {
   unsigned int magic;
   int version, i, j;
@@ -272,44 +274,46 @@ void conv_map(FILE *in, FILE *out)
 
   fprintf(out, "{\n");
 
+  fprintf(out, "  \"conversion\" : \"Map converted from '%s'\",\n\n", src_name);
+
   // author
   if (get_string(in, str, sizeof(str)) < 0)
     die("EOF reading author");
-  fprintf(out, "  author: ");
+  fprintf(out, "  \"author\" : ");
   write_string(out, str);
   fprintf(out, ",\n");
 
   // comments
   if (get_string(in, str, sizeof(str)) < 0)
     die("EOF reading commnents");
-  fprintf(out, "  comments: ");
+  fprintf(out, "  \"comments\" : ");
   write_string(out, str);
   fprintf(out, ",\n");
 
   // tileset
   if (get_string(in, str, sizeof(str)) < 0)
     die("EOF reading tileset");
-  fprintf(out, "  tileset: ");
+  fprintf(out, "  \"tileset\" : ");
   write_string(out, str);
   fprintf(out, ",\n\n");
 
   // parameters
-  fprintf(out, "  maxyspeed: %d,\n", get_u32(in));
-  fprintf(out, "  jumphold: %d,\n", get_u32(in));
-  fprintf(out, "  gravity: %d,\n", get_u32(in));
-  fprintf(out, "  maxxspeed: %d,\n", get_u32(in));
-  fprintf(out, "  accel: %d,\n", get_u32(in));
-  fprintf(out, "  jumpaccel: %d,\n", get_u32(in));
-  fprintf(out, "  friction: %d,\n", get_u32(in));
-  fprintf(out, "  frameskip: %d,\n\n", get_u32(in));
+  fprintf(out, "  \"maxyspeed\" : %d,\n", get_u32(in));
+  fprintf(out, "  \"jumphold\" : %d,\n", get_u32(in));
+  fprintf(out, "  \"gravity\" : %d,\n", get_u32(in));
+  fprintf(out, "  \"maxxspeed\" : %d,\n", get_u32(in));
+  fprintf(out, "  \"accel\" : %d,\n", get_u32(in));
+  fprintf(out, "  \"jumpaccel\" : %d,\n", get_u32(in));
+  fprintf(out, "  \"friction\" : %d,\n", get_u32(in));
+  fprintf(out, "  \"frameskip\" : %d,\n\n", get_u32(in));
 
   // tile size
   if (version >= 1) {
     unsigned int w = get_u32(in);
     unsigned int h = get_u32(in);
-    fprintf(out, "  tile_size: [ %d, %d ],\n", w, h);
+    fprintf(out, "  \"tile_size\" : [ %d, %d ],\n", w, h);
   } else {
-    fprintf(out, "  tile_size: [ 64, 64 ],\n");
+    fprintf(out, "  \"tile_size\" : [ 64, 64 ],\n");
   }
 
   // map size
@@ -318,7 +322,7 @@ void conv_map(FILE *in, FILE *out)
 
   if (w <= 0 || h <= 0 || w*h <= 0)
     die("bad map size");
-  fprintf(out, "  size: [ %d, %d ],\n\n", w, h);
+  fprintf(out, "  \"size\" : [ %d, %d ],\n\n", w, h);
 
   // dictionary
   if (version >= 2) {
@@ -351,11 +355,11 @@ void conv_map(FILE *in, FILE *out)
     }
 
   // background tiles
-  fprintf(out, "  bg_tiles: [\n");
+  fprintf(out, "  \"bg_tiles\" : [\n");
   for (i = 0; i < h; i++) {
     fprintf(out, "    [ ");
     for (j = 0; j < w; j++) {
-      fprintf(out, " 0x%04x", tiles_bg[i*w+j]);
+      fprintf(out, " %u", tiles_bg[i*w+j]);
       if (j != w-1)
 	fprintf(out, ",");
     }
@@ -368,11 +372,11 @@ void conv_map(FILE *in, FILE *out)
   fprintf(out, "  ],\n");
 
   // background tiles
-  fprintf(out, "  fg_tiles: [\n");
+  fprintf(out, "  \"fg_tiles\" : [\n");
   for (i = 0; i < h; i++) {
     fprintf(out, "    [ ");
     for (j = 0; j < w; j++) {
-      fprintf(out, " 0x%04x", tiles_fg[i*w+j]);
+      fprintf(out, " %u", tiles_fg[i*w+j]);
       if (j != w-1)
 	fprintf(out, ",");
     }
@@ -385,11 +389,11 @@ void conv_map(FILE *in, FILE *out)
   fprintf(out, "  ],\n");
 
   // clipping
-  fprintf(out, "  clipping: [\n");
+  fprintf(out, "  \"clipping\" : [\n");
   for (i = 0; i < h; i++) {
     fprintf(out, "    [ ");
     for (j = 0; j < w; j++) {
-      fprintf(out, " 0x%04x", tiles_clip[i*w+j]);
+      fprintf(out, " %u", tiles_clip[i*w+j]);
       if (j != w-1)
 	fprintf(out, ",");
     }
@@ -399,7 +403,7 @@ void conv_map(FILE *in, FILE *out)
     else
       fprintf(out, "\n");
   }
-  fprintf(out, "  ],\n");
+  fprintf(out, "  ]\n");
 
   fprintf(out, "}\n");
 
@@ -413,6 +417,7 @@ void conv_map(FILE *in, FILE *out)
 int main(int argc, char *argv[])
 {
   FILE *in, *out;
+  char *src_name;
 
   if (argc != 3) {
     printf("USAGE: %s input.map output.js\n", argv[0]);
@@ -430,8 +435,12 @@ int main(int argc, char *argv[])
     exit(1);
   }
 
-  fprintf(out, "/* Map converted from '%s' */\n\n", argv[1]);
-  conv_map(in, out);
+  src_name = strrchr(argv[1], '/');
+  if (src_name == NULL)
+    src_name = argv[1];
+  else
+    src_name++;
+  conv_map(in, out, src_name);
 
   fclose(in);
   fclose(out);
