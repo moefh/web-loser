@@ -105,7 +105,11 @@ Game.prototype.start = function() {
         this.player.set_state(64*spawn.x, 64*spawn.y, spawn.dir);
     else
         this.player.set_state(5, 5, DIR_RIGHT);
-    this.updater_id = setInterval($.proxy(this.step, this), 30);
+
+    self = this;
+    this.updater_id = setInterval(function (){
+        self.step();
+    }, 30);
 };
 
 /**
