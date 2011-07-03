@@ -22,25 +22,34 @@
 
 <body>
 
-<form>
-Map:
-<select id="select_map" name="select_map">
-  <option value="castle-16">Castle</option>
-  <option value="castle">Old castle</option>
-  <option value="arena">Arena</option>
-  <option value="arena3">Arena 3</option>
-  <option value="entrance">Entrance</option>
-</select>
-Character:
-<select id="select_char" name="select_char">
-  <option value="loserboy">Loserboy</option>
-  <option value="punkman">Punkman</option>
-  <option value="stickman">Stickman</option>
-</select>
-<input type="button" value="Apply" onclick="game.reset()">
-</form>
-<canvas id="screen" width="640" height="480"></canvas>
-<div id="debug"></div>
+<div class="centerBox" id="overlay">
+<div id="options">
+	<form>
+	<span>Map:</span>
+	<span>
+	<select id="select_map" name="select_map">
+			<option value="castle-16">Castle</option>
+			<option value="castle">Old castle</option>
+			<option value="arena">Arena</option>
+			<option value="arena3">Arena 3</option>
+			<option value="entrance">Entrance</option>
+		</select>
+	</span>
+	<span>Character:</span>
+	<span>
+		<select id="select_char" name="select_char">
+			<option value="loserboy">Loserboy</option>
+			<option value="punkman">Punkman</option>
+			<option value="stickman">Stickman</option>
+		</select>
+	</span>
+	<span><input type="button" value="Apply" onclick="game.reset()"></span>
+	</form>
+</div>
+</div>
 
+<canvas class="centerBox" id="screen" width="640" height="480"></canvas>
+
+<div id="debug"></div>
 </body>
 </html>
