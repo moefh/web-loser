@@ -63,14 +63,14 @@ Player.prototype.set_state = function(x, y, dir) {
 Player.prototype.input_stand = function() {
     var done_dir = false;
 
-    if (this.keyboard.keys_pressed[KEY_UP] && ! done_dir) {
+    if (this.keyboard.keyPressed(KEY_UP) && ! done_dir) {
         done_dir = true;
         this.state = PLAYER_ST_JUMP_START;
         this.dy -= MAX_JUMP_SPEED;
         this.frame = 0;
     }
 
-    if (this.keyboard.keys_down[KEY_RIGHT] && ! done_dir) {
+    if (this.keyboard.keyDown(KEY_RIGHT) && ! done_dir) {
         done_dir = true;
         this.state = PLAYER_ST_WALK;
         this.dir = DIR_RIGHT;
@@ -78,7 +78,7 @@ Player.prototype.input_stand = function() {
         this.frame = 0;
     }
 
-    if (this.keyboard.keys_down[KEY_LEFT] && ! done_dir) {
+    if (this.keyboard.keyDown(KEY_LEFT) && ! done_dir) {
         done_dir = true;
         this.state = PLAYER_ST_WALK;
         this.dir = DIR_LEFT;
@@ -91,14 +91,14 @@ Player.prototype.input_stand = function() {
 Player.prototype.input_walk = function() {
     var done_dir = false;
 
-    if (this.keyboard.keys_pressed[KEY_UP] && ! done_dir) {
+    if (this.keyboard.keyPressed(KEY_UP) && ! done_dir) {
         done_dir = true;
         this.state = PLAYER_ST_JUMP_START;
         this.dy -= MAX_JUMP_SPEED;
         this.frame = 0;
     }
 
-    if (this.keyboard.keys_down[KEY_RIGHT] && ! done_dir) {
+    if (this.keyboard.keyDown(KEY_RIGHT) && ! done_dir) {
         done_dir = true;
         this.dir = DIR_RIGHT;
         this.dx += INC_WALK_SPEED;
@@ -106,7 +106,7 @@ Player.prototype.input_walk = function() {
             this.dx = MAX_WALK_SPEED;
     }
 
-    if (this.keyboard.keys_down[KEY_LEFT] && ! done_dir) {
+    if (this.keyboard.keyDown(KEY_LEFT) && ! done_dir) {
         done_dir = true;
         this.dir = DIR_LEFT;
         this.dx -= INC_WALK_SPEED;
@@ -118,7 +118,7 @@ Player.prototype.input_walk = function() {
 Player.prototype.input_jump_start = function() {
     var done_dir = false;
 
-    if (this.keyboard.keys_down[KEY_RIGHT] && ! done_dir) {
+    if (this.keyboard.keyDown(KEY_RIGHT) && ! done_dir) {
         done_dir = true;
         this.dir = DIR_RIGHT;
         this.dx += INC_WALK_SPEED;
@@ -126,7 +126,7 @@ Player.prototype.input_jump_start = function() {
             this.dx = MAX_WALK_SPEED;
     }
 
-    if (this.keyboard.keys_down[KEY_LEFT] && ! done_dir) {
+    if (this.keyboard.keyDown(KEY_LEFT) && ! done_dir) {
         done_dir = true;
         this.dir = DIR_LEFT;
         this.dx -= INC_WALK_SPEED;
@@ -134,7 +134,7 @@ Player.prototype.input_jump_start = function() {
             this.dx = -MAX_WALK_SPEED;
     }
 
-    if (this.keyboard.keys_down[KEY_UP])
+    if (this.keyboard.keyDown(KEY_UP))
         this.dy -= INC_JUMP_SPEED;
     else
         this.state = PLAYER_ST_JUMP_END;
@@ -143,7 +143,7 @@ Player.prototype.input_jump_start = function() {
 Player.prototype.input_jump_end = function() {
     var done_dir = false;
 
-    if (this.keyboard.keys_down[KEY_RIGHT] && ! done_dir) {
+    if (this.keyboard.keyDown(KEY_RIGHT) && ! done_dir) {
         done_dir = true;
         this.dir = DIR_RIGHT;
         this.dx += INC_WALK_SPEED;
@@ -151,7 +151,7 @@ Player.prototype.input_jump_end = function() {
             this.dx = MAX_WALK_SPEED;
     }
 
-    if (this.keyboard.keys_down[KEY_LEFT] && ! done_dir) {
+    if (this.keyboard.keyDown(KEY_LEFT) && ! done_dir) {
         done_dir = true;
         this.dir = DIR_LEFT;
         this.dx -= INC_WALK_SPEED;
@@ -229,7 +229,7 @@ Player.prototype.move = function(map) {
     if (delta && delta[1] != try_dy) {
         if (try_dy > 0) { 
             // hit the ground
-            this.state = (this.keyboard.keys_down[KEY_LEFT] || this.keyboard.keys_down[KEY_RIGHT]) ? PLAYER_ST_WALK : PLAYER_ST_STAND;
+            this.state = (this.keyboard.keyDown(KEY_LEFT) || this.keyboard.keyDown(KEY_RIGHT)) ? PLAYER_ST_WALK : PLAYER_ST_STAND;
             this.dy = 0;
         } else {
             // hit the ceiling
@@ -309,7 +309,7 @@ Player.prototype.calc_step = function(game) {
     case 3: this.input_jump_end(); break;
     }
 
-    if (this.keyboard.keys_pressed[KEY_SHOOT]) {
+    if (this.keyboard.keyPressed(KEY_SHOOT)) {
         var shot = game.add_npc(npc_def['missile'], shot_step);
         shot.x = this.x;
         shot.y = this.y + Math.floor(this.def.clip[1]/2);
