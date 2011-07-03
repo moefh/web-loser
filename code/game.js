@@ -21,18 +21,18 @@ function Game() {
     
     this.screen.show_message(10, 10, "Loading images...");
     this.images.load(images_table,
-		     function() {
-			 self.reset();
-		     },
-		     function(url) {
-			 self.screen.show_message(10, 10, "Error loading image '" + url + "'");
-		     });
+                     function() {
+                         self.reset();
+                     },
+                     function(url) {
+                         self.screen.show_message(10, 10, "Error loading image '" + url + "'");
+                     });
 }
 
 Game.prototype.debug = function(str, clear) {
     var el = document.getElementById("debug");
     if (clear)
-	el.innerHTML = "";
+        el.innerHTML = "";
     el.innerHTML += str + "<br />\n";
 };
 
@@ -42,8 +42,8 @@ Game.prototype.debug = function(str, clear) {
  */
 Game.prototype.reset = function() {
     if (this.updater_id) {
-	clearInterval(this.updater_id);
-	this.updater_id = null;
+        clearInterval(this.updater_id);
+        this.updater_id = null;
     }
     
     var self = this;
@@ -54,21 +54,21 @@ Game.prototype.reset = function() {
     this.npcs = {};
 
     var player_npc = this.add_npc(npc_def[sel_char],
-				  function() {
-				      self.player.calc_step(self);
-				      self.player.move(self.map);
-				  });
+                                  function() {
+                                      self.player.calc_step(self);
+                                      self.player.move(self.map);
+                                  });
     this.player = new Player(player_npc, this.collision, this.keyboard);
 
     this.screen.show_message(10, 10, "Loading map...");
     this.map = new Map(sel_map);
     this.map.load(this.images,
-		  function() {
-		      self.start();
-		  },
-		  function(msg) {
-		      self.screen.show_message(10, 10, "Error loading map:\n" + msg);
-		  });
+                  function() {
+                      self.start();
+                  },
+                  function(msg) {
+                      self.screen.show_message(10, 10, "Error loading map:\n" + msg);
+                  });
 };
 
 /**
@@ -81,12 +81,12 @@ Game.prototype.start = function() {
     this.player.load_map_parameters(this.map);
     var spawn = this.map.spawn_points[0];
     if (spawn)
-	this.player.set_state(64*spawn.x, 64*spawn.y, spawn.dir);
+        this.player.set_state(64*spawn.x, 64*spawn.y, spawn.dir);
     else
-	this.player.set_state(5, 5, DIR_RIGHT);
+        this.player.set_state(5, 5, DIR_RIGHT);
     var self = this;
     this.updater_id = setInterval( function() {
-	self.step()
+        self.step()
     }, 30);
 };
 
@@ -95,14 +95,14 @@ Game.prototype.start = function() {
  */
 Game.prototype.step = function(n) {
     if (! n)
-	n = 1;
+        n = 1;
     for (var x = 0; x < n; x++) {
-	for (var npc_id in this.npcs) {
-	    if (this.npcs[npc_id].step_func)
-		this.npcs[npc_id].step_func.call(this.npcs[npc_id], this);
-	}
-	this.screen.draw(this.images, this.map, this.npcs, this.player.npc);
-	this.keyboard.update();
+        for (var npc_id in this.npcs) {
+            if (this.npcs[npc_id].step_func)
+                this.npcs[npc_id].step_func.call(this.npcs[npc_id], this);
+        }
+        this.screen.draw(this.images, this.map, this.npcs, this.player.npc);
+        this.keyboard.update();
     }
 };
 
@@ -114,10 +114,10 @@ Game.prototype.add_npc = function(npc_def, handler) {
 
 Game.prototype.remove_npc = function(npc) {
     for (var npc_id in this.npcs)
-	if (this.npcs[npc_id] == npc) {
-	    delete this.npcs[npc_id];
-	    return true;
-	}
+        if (this.npcs[npc_id] == npc) {
+            delete this.npcs[npc_id];
+            return true;
+        }
     return false;
 };
 

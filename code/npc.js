@@ -22,9 +22,9 @@ function NPC(def, step_func) {
 
 NPC.prototype.get_img_x = function() {
     if (this.dir == DIR_LEFT)
-	return this.x + this.def.clip[0] + this.def.clip[2] - this.def.w;
+        return this.x + this.def.clip[0] + this.def.clip[2] - this.def.w;
     else
-	return this.x - this.def.clip[0] + 1;
+        return this.x - this.def.clip[0] + 1;
 };
 
 NPC.prototype.get_img_y = function() {

@@ -17,6 +17,13 @@ function Map(name)
     this.spawn_points = null;
 }
 
+function test_load(name) {
+    var req = new XMLHttpRequest();
+    req.open('GET', "maps/" + name + ".js", false);
+    req.send(null);
+    return req.responseText;
+}
+
 /**
  * Load the map via XMLHttpRequest. The image required by the map (the
  * tileset) must be already loaded in the images object.
@@ -26,12 +33,12 @@ Map.prototype.load = function(images, ok_func, err_func) {
     var self = this;
     var url = 'maps/' + this.name + '.js';
     $.getJSON(url,
-	      function(data) {
-		  self.load_parse(data, images, ok_func, err_func);
-	      })
-	.error(function(jqXHR, message, what) {
-	    err_func("Can't load map from '" + url + "': " + what);
-	});
+              function(data) {
+                  self.load_parse(data, images, ok_func, err_func);
+              })
+        .error(function(jqXHR, message, what) {
+            err_func("Can't load map from '" + url + "': " + what);
+        });
 };
 
 /* Convert the w*h clip_data matrix containing the clipping data form
@@ -41,17 +48,17 @@ Map.prototype.build_clipping_map = function(clip_data) {
     var map = [];
 
     for (var y = 0; y < clip_data.length; y++) {
-	map[2*y] = [];
-	map[2*y+1] = [];
-	for (var x = 0; x < clip_data[y].length; x++) {
-	    var clip_bits = 0;
-	    if (clip_data[y][x] <= map_clip_conv.length)
-		clip_bits = map_clip_conv[clip_data[y][x]];
-	    map[2*y][2*x] =     (clip_bits & 1) ? 1 : 0;
-	    map[2*y][2*x+1] =   (clip_bits & 2) ? 1 : 0;
-	    map[2*y+1][2*x] =   (clip_bits & 4) ? 1 : 0;
-	    map[2*y+1][2*x+1] = (clip_bits & 8) ? 1 : 0;
-	}
+        map[2*y] = [];
+        map[2*y+1] = [];
+        for (var x = 0; x < clip_data[y].length; x++) {
+            var clip_bits = 0;
+            if (clip_data[y][x] <= map_clip_conv.length)
+                clip_bits = map_clip_conv[clip_data[y][x]];
+            map[2*y][2*x] =     (clip_bits & 1) ? 1 : 0;
+            map[2*y][2*x+1] =   (clip_bits & 2) ? 1 : 0;
+            map[2*y+1][2*x] =   (clip_bits & 4) ? 1 : 0;
+            map[2*y+1][2*x+1] = (clip_bits & 8) ? 1 : 0;
+        }
     }
 
     return map;
@@ -60,60 +67,60 @@ Map.prototype.build_clipping_map = function(clip_data) {
 Map.prototype.get_spawn_points = function(clip_data) {
     var spawns = [];
     for (var y = 0; y < clip_data.length; y++)
-	for (var x = 0; x < clip_data[y].length; x++) {
-	    var data = clip_data[y][x];
-	    if (data == 16 || data == 17) {
-		console.log("got spawn point at ", x, y);
-		var spawn = {
-		    x : x,
-		    y : y,
-		    dir : (data == 16) ? DIR_RIGHT : DIR_LEFT
-		};
-		spawns[spawns.length] = spawn;
-	    }
-	}
+        for (var x = 0; x < clip_data[y].length; x++) {
+            var data = clip_data[y][x];
+            if (data == 16 || data == 17) {
+                console.log("got spawn point at ", x, y);
+                var spawn = {
+                    x : x,
+                    y : y,
+                    dir : (data == 16) ? DIR_RIGHT : DIR_LEFT
+                };
+                spawns[spawns.length] = spawn;
+            }
+        }
     return spawns;
 };
 
 Map.prototype.load_parse = function(data, images, ok_func, err_func) {
     try {
-	if (data.tile_size[0] != 64|| data.tile_size[1] != 64)
-	    throw "invalid tile size";
-	if (data.size[0] <= 0 || data.size[1] <= 0)
-	    throw "invalid map size";
-	if (data.size[1] != data.bg_tiles.length)
-	    throw "invalid bg tile length (" + data.size[0]*data.size[1] + " vs " + data.bg_tiles.length + ")";
-	if (data.size[1] != data.fg_tiles.length)
-	    throw "invalid fg tile length";
-	if (data.size[1] != data.fg_tiles.length)
-	    throw "invalid clip tile length";
+        if (data.tile_size[0] != 64|| data.tile_size[1] != 64)
+            throw "invalid tile size";
+        if (data.size[0] <= 0 || data.size[1] <= 0)
+            throw "invalid map size";
+        if (data.size[1] != data.bg_tiles.length)
+            throw "invalid bg tile length (" + data.size[0]*data.size[1] + " vs " + data.bg_tiles.length + ")";
+        if (data.size[1] != data.fg_tiles.length)
+            throw "invalid fg tile length";
+        if (data.size[1] != data.fg_tiles.length)
+            throw "invalid clip tile length";
 
-	this.image = images.get_image(data.tileset);
-	if (! this.image)
-	    throw "invalid tileset: '" + data.tileset + "'";
+        this.image = images.get_image(data.tileset);
+        if (! this.image)
+            throw "invalid tileset: '" + data.tileset + "'";
 
-	this.w = data.size[0];
-	this.h = data.size[1];
-	this.params = {
-	    maxyspeed: data.maxyspeed,
-	    jumphold: data.jumphold,
-	    gravity: data.gravity,
-	    maxxspeed: data.maxxspeed,
-	    accel: data.accel,
-	    jumpaccel: data.jumpaccel,
-	    friction: data.friction,
-	    frameskip: data.frameskip
-	};
-	
-	this.bg = data.bg_tiles;
-	this.fg = data.fg_tiles;
-	this.clip = data.clipping;
-	this.clip_map = this.build_clipping_map(data.clipping);
-	this.spawn_points = this.get_spawn_points(data.clipping);
+        this.w = data.size[0];
+        this.h = data.size[1];
+        this.params = {
+            maxyspeed: data.maxyspeed,
+            jumphold: data.jumphold,
+            gravity: data.gravity,
+            maxxspeed: data.maxxspeed,
+            accel: data.accel,
+            jumpaccel: data.jumpaccel,
+            friction: data.friction,
+            frameskip: data.frameskip
+        };
+        
+        this.bg = data.bg_tiles;
+        this.fg = data.fg_tiles;
+        this.clip = data.clipping;
+        this.clip_map = this.build_clipping_map(data.clipping);
+        this.spawn_points = this.get_spawn_points(data.clipping);
     }
     catch (e) {
-	err_func("error parsing map:\n" + e);
-	return;
+        err_func("error parsing map:\n" + e);
+        return;
     }
     ok_func();
 };

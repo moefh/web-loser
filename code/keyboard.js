@@ -39,6 +39,6 @@ Keyboard.prototype.ev_keyup = function(e) {
 
 Keyboard.prototype.update = function() {
     for (var i = 0; i < this.keys_pressed.length; i++)
-	if (this.keys_pressed[i])
-	    this.keys_pressed[i] = false;
+        if (this.keys_pressed[i])
+            this.keys_pressed[i] = false;
 };
