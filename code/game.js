@@ -29,13 +29,11 @@ function Game() {
     var errTag = 'ERR';
     this.evt = new Event(errTag, this.error, this);
 
-    var self = this;
-    
     this.screen.show_message(10, 10, "Loading images...");
 
     var loadTag = 'IMG_LOADED';
-    this.evt.bind(loadTag, self.reset, self);
-    this.images.load(images_table, self.evt, loadTag);
+    this.evt.bind(loadTag, this.reset, this);
+    this.images.load(images_table, this.evt, loadTag);
 }
 
 Game.prototype.setViewport = function(w, h){
@@ -90,8 +88,8 @@ Game.prototype.reset = function() {
     this.map = new Map(sel_map);
 
     var loadTag = 'MAP_LOADED';
-    this.evt.bind(loadTag, self.start, self);
-    this.map.load(this.images, self.evt, loadTag);
+    this.evt.bind(loadTag, this.start, this);
+    this.map.load(this.images, this.evt, loadTag);
 };
 
 /**
@@ -107,10 +105,7 @@ Game.prototype.start = function() {
         this.player.set_state(64*spawn.x, 64*spawn.y, spawn.dir);
     else
         this.player.set_state(5, 5, DIR_RIGHT);
-    var self = this;
-    this.updater_id = setInterval( function() {
-        self.step()
-    }, 30);
+    this.updater_id = setInterval($.proxy(this.step, this), 30);
 };
 
 /**
