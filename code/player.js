@@ -283,23 +283,44 @@ Player.prototype.update_npc = function() {
     this.fix_frame();
     this.npc.x = this.x;
     this.npc.y = this.y;
-    if (this.dir == DIR_LEFT)
-	this.npc.img_x = this.x + (this.def.clip[0] + this.def.clip[2] - this.def.w);
-    else
-	this.npc.img_x = this.x - this.def.clip[0] + 1;
-    this.npc.img_y = this.y - this.def.clip[1] + 1;
+    this.npc.dir = this.dir;
     this.npc.frame = this.client_frame;
 };
+
+function shot_step(game) {
+    if (game.collision.check_collision(game.map, this.x + this.def.clip[0], this.y + this.def.clip[1], this.def.clip[2], this.def.clip[3])) {
+	game.remove_npc(this);
+	return;
+    }
+    if (this.dir == DIR_LEFT)
+	this.x -= 2*Math.floor(MAX_WALK_SPEED/1000);
+    else
+	this.x += 2*Math.floor(MAX_WALK_SPEED/1000);
+}
 
 /**
  * Compute one step of the player.
  */
-Player.prototype.calc_step = function() {
+Player.prototype.calc_step = function(game) {
     switch (this.state) {
     case 0: this.input_stand(); break;
     case 1: this.input_walk(); break;
     case 2: this.input_jump_start(); break;
     case 3: this.input_jump_end(); break;
+    }
+
+    if (this.keyboard.keys_pressed[KEY_SHOOT]) {
+	var shot = game.add_npc(npc_def['missile'], shot_step);
+	shot.x = this.x;
+	shot.y = this.y + Math.floor(this.def.clip[1]/2);
+	shot.dir = this.dir;
+	if (this.dir == DIR_LEFT) {
+	    shot.x -= Math.floor(shot.def.w/2);
+	    shot.frame = shot.def.mirror;
+	} else {
+	    shot.x += Math.floor(shot.def.w/2);
+	    shot.frame = 0;
+	}	
     }
 };
 
