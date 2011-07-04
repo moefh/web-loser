@@ -15,7 +15,7 @@ function Browser(screen, event) {
     
     $(window).resize($.proxy(this.growScreen, this));
     
-    self = this;
+    var self = this;
     $('#messages').click(function(){
         self.event.trigger('OSD_CLICK');
     });
