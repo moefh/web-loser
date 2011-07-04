@@ -26,18 +26,27 @@ Browser.prototype.osdClear = function(){
 /**
  * Handles .centerBox class, changing size of main box objects
  */
-Browser.prototype.setCenterBoxSize = function(w, h){
-    $('.centerBox').css({
-        'width': w,
-        'height': h,
-        'marginLeft': -w / 2,
-        'marginTop': -h / 2
-    });
+Browser.prototype.setCenterBoxSize = function(w, h, animate){
+    if(animate == 1){
+        $('.centerBox').animate({
+            'width': w,
+            'height': h,
+            'marginLeft': -w / 2,
+            'marginTop': -h / 2
+        });
+    } else {
+        $('.centerBox').css({
+            'width': w,
+            'height': h,
+            'marginLeft': -w / 2,
+            'marginTop': -h / 2
+        });
+    }
 };
-Browser.prototype.growSmallScreen = function(){
-    this.setCenterBoxSize(DEFAULT_WIDTH, DEFAULT_HEIGHT);
+Browser.prototype.growSmallScreen = function(animate){
+    this.setCenterBoxSize(DEFAULT_WIDTH, DEFAULT_HEIGHT, animate);
 };
-Browser.prototype.growFullScreen = function() {
+Browser.prototype.growFullScreen = function(animate) {
     var w = $(window).width();
     var h = $(window).height();
     var screenSize = this.screen.getSize();
@@ -48,15 +57,15 @@ Browser.prototype.growFullScreen = function() {
     else
         h = Math.round(w / game_aspect);
 
-    this.setCenterBoxSize(w,h);
+    this.setCenterBoxSize(w,h, animate);
 };
-Browser.prototype.growScreen = function(){
+Browser.prototype.growScreen = function(animate){
     if(this.fullScreen)
-        this.growFullScreen();
+        this.growFullScreen(animate);
     else
-        this.growSmallScreen();
+        this.growSmallScreen(animate);
 }
 Browser.prototype.toggleFullScreen = function(){
     this.fullScreen = (this.fullScreen+1) % 2;
-    this.growScreen();
+    this.growScreen(1);
 };
