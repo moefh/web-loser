@@ -18,13 +18,6 @@ function Map(name)
     this.spawn_points = null;
 }
 
-function test_load(name) {
-    var req = new XMLHttpRequest();
-    req.open('GET', "maps/" + name + ".js", false);
-    req.send(null);
-    return req.responseText;
-}
-
 /**
  * Load the map via XMLHttpRequest. The image required by the map (the
  * tileset) must be already loaded in the images object.

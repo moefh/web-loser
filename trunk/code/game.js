@@ -47,7 +47,7 @@ Game.prototype.externalHandler = function(e){
     var KEY_SPACE = 32;
     switch(e.keyCode){
         case KEY_SPACE:
-            self.togglePause();
+            this.togglePause();
             break;
         default:
     }
@@ -143,7 +143,7 @@ Game.prototype.pause = function(){
     this.message.osd('PAUSE');
 };
 Game.prototype.resume = function(){
-    self = this;
+    var self = this;
     this.updater_id = setInterval(function (){
         self.step();
     }, 30);
