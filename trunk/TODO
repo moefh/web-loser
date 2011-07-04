@@ -1,0 +1,34 @@
+
+In no particular order:
+
+*) Minimap
+
+Draw a small rectangle on the corner of the screen showing a small
+version of the current map.  In the original Loser Corps the image was
+based on the collision map (available in this version as 'map.clip'),
+not the map tiles, but this might be changed.
+
+Transparency would be nice.
+
+
+*) Map objects
+
+The map files specify an attribute "objects", an array of map objects.
+An object's "npc" attribute specifies its behaviour (e.g. "shadow" is
+an enemy, "energy" is an energy capsule, "tele/teleporter" is a
+teleporter source, "tele/teletarget" is a teleport target, etc.).
+
+Not all object attributes are relevant (e.g. "vulnerability" only
+applies to enemies).
+
+
+*) Multiplayer
+
+Some kind of multiplayer involving a server.
+
+
+*) Map editor
+
+Current maps are exported from the original maps using maps/src/conv.
+The original map editor is awful, we should make a new one.
+
