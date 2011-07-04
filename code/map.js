@@ -104,6 +104,16 @@ Map.prototype.load_parse = function(data, images, events, tag) {
             this.bg_image = images.get_image(bg_image);
             if (! this.bg_image)
                 throw "invalid background image: '" + bg_image + "'";
+                
+            // Re-scale the background according to map size
+            // TODO: there's got to be a better way!
+            // XXX: edit the scalling to play with the parallax effect
+            var cv = document.createElement('canvas');
+            cv.width = Math.ceil(data.size[0] * 64 / 2);
+            cv.height = Math.ceil(data.size[1] * 64 / 2);
+            var ctx = cv.getContext('2d');
+            ctx.drawImage(this.bg_image, 0, 0, cv.width, cv.height);
+            this.bg_image = cv;
         }
 
         this.w = data.size[0];
@@ -134,6 +144,10 @@ Map.prototype.load_parse = function(data, images, events, tag) {
 
 Map.prototype.get_image = function() {
     return this.image;
+};
+
+Map.prototype.get_bg_image = function() {
+    return this.bg_image;
 };
 
 /**
