@@ -1,4 +1,4 @@
-var images_table = [ 'castle', 'castle3', 'loserboy', 'stickman', 'punkman', 'power', 'sky' ];
+var images_table = [ 'castle', 'castle3', 'loserboy', 'stickman', 'punkman', 'blacknight', 'power', 'sky' ];
 var game;
 
 /**
