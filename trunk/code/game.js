@@ -25,15 +25,12 @@ function Game() {
     this.keyboard = new Keyboard();
     this.screen = new Screen(this.width, this.height, document.getElementById('screen'));
     this.images = new Images();
-    this.browser = new Browser(this.screen);
-    
     var errTag = 'ERR';
     this.evt = new Event(errTag, this.error, this);
+    this.browser = new Browser(this.screen, this.evt);
 
     // Bind externalHandler to keydown
     $(document).keydown($.proxy(this.externalHandler, this));
-    // Bind windowResize to resize
-    $(window).resize($.proxy(this.browser.growScreen, this.browser));
 
     this.screen.show_message(10, 10, "Loading images...");
     var loadTag = 'IMG_LOADED';
@@ -135,6 +132,7 @@ Game.prototype.pause = function(){
     clearInterval(this.updater_id);
     this.updater_id = 0;
     this.browser.osd('PAUSE');
+    this.evt.bind('OSD_CLICK', this.resume, this);
 };
 Game.prototype.resume = function(){
     var self = this;
