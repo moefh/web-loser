@@ -11,21 +11,15 @@ function Game() {
     this.next_npc_id = 0;
     this.map = null;
     this.updater_id = null;
-    this.viewport = {};
- 
-    var screen_size = document.getElementById('screen_size');
-    if (screen_size) {
-        var size = /^(\d+)x(\d+)$/.exec(screen_size.value);
-        this.setViewport(size[1], size[2]);
-    } else
-        this.setViewport($(window).width(), $(window).height());
-    this.resolutionRatio = 1/2;
-   
+    
+    this.width = 480;
+    this.height = 360;
+    this.windowResize();
+
     this.collision = new Collision();
     this.keyboard = new Keyboard();
-    this.screen = new Screen(this.viewport.width * this.resolutionRatio, this.viewport.height * this.resolutionRatio, document.getElementById('screen'));
+    this.screen = new Screen(this.width, this.height, document.getElementById('screen'));
     this.images = new Images();
-    
     this.message = new Message($('#messages'));
     
     var errTag = 'ERR';
@@ -33,6 +27,8 @@ function Game() {
 
     // Bind externalHandler to keydown
     $(document).keydown($.proxy(this.externalHandler, this));
+    // Bind windowResize to resize
+    $(window).resize($.proxy(this.windowResize, this));
 
     this.screen.show_message(10, 10, "Loading images...");
     var loadTag = 'IMG_LOADED';
@@ -53,18 +49,23 @@ Game.prototype.externalHandler = function(e){
     }
 };
 
-Game.prototype.setViewport = function(w, h){
-    this.viewport.width = w;
-    this.viewport.height = h;
+Game.prototype.windowResize = function() {
+    var w = $(window).width();
+    var h = $(window).height();
+    var game_aspect = this.width/this.height;
+
+    if(w/h > game_aspect)
+        w = Math.round(h * game_aspect);
+    else
+        h = Math.round(w / game_aspect);
 
     $('.centerBox').css({
-	'width': w,
-	'height': h,
-	'marginLeft': -w / 2,
-	'marginTop': -h / 2
+        'width': w,
+        'height': h,
+        'marginLeft': -w / 2,
+        'marginTop': -h / 2
     });
 };
-
 Game.prototype.error = function(e, data){
     var errMsg = 'Error: ' + data;
     this.screen.show_message(10,10, errMsg);
