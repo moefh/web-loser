@@ -26,6 +26,8 @@ function Game() {
     this.screen = new Screen(this.viewport.width * this.resolutionRatio, this.viewport.height * this.resolutionRatio, document.getElementById('screen'));
     this.images = new Images();
     
+    this.message = new Message($('#messages'));
+    
     var errTag = 'ERR';
     this.evt = new Event(errTag, this.error, this);
 
@@ -138,12 +140,14 @@ Game.prototype.togglePause = function(){
 Game.prototype.pause = function(){
     clearInterval(this.updater_id);
     this.updater_id = 0;
+    this.message.osd('PAUSE');
 };
 Game.prototype.resume = function(){
     self = this;
     this.updater_id = setInterval(function (){
         self.step();
     }, 30);
+    this.message.osdClear();
 };
 
 /**
