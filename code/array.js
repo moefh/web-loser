@@ -17,7 +17,7 @@ if (!Array.prototype.remove) {
         } else {
             return 0;
         }
-    }
+    };
 }
 /**
  * indexOf: for backward compatibility
