@@ -23,6 +23,13 @@ function Screen(lw, lh, canvas)
     this.tile_h = 64 * this.scale_y;
 }
 
+Screen.prototype.getSize = function(){
+    return {
+        'width': this.logical_w,
+        'height': this.logical_h
+    };
+};
+
 Screen.prototype.show_message = function(x, y, msg) {
     this.ctx.font = "12pt sans-serif";
     this.ctx.textBaseline = "top";
