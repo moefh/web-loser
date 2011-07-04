@@ -7,6 +7,7 @@ function Map(name)
 {
     this.name = name;
     this.image = null;
+    this.bg_image = null;
     this.w = 0;
     this.h = 0;
     this.params = null;
@@ -97,6 +98,13 @@ Map.prototype.load_parse = function(data, images, events, tag) {
         this.image = images.get_image(tileset);
         if (! this.image)
             throw "invalid tileset: '" + data.tileset + "'";
+
+        var bg_image = data.tileset.replace(/^.*:([^:]+)$/, "$1");
+        if (bg_image != data.tileset) {
+            this.bg_image = images.get_image(bg_image);
+            if (! this.bg_image)
+                throw "invalid background image: '" + bg_image + "'";
+        }
 
         this.w = data.size[0];
         this.h = data.size[1];
