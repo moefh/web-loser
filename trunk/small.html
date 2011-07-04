@@ -1,58 +1,66 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
-<head>
-	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 
-	<title>Loser Corps</title>
-	<link type="text/css" rel="stylesheet" href="css/style.css" />
-	
-	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js"></script>
-	<script type="text/javascript" src="data/npc_def.js"></script>
-    <script type="text/javascript" src="code/array.js"></script>
-	<script type="text/javascript" src="code/collision.js"></script>
-	<script type="text/javascript" src="code/keyboard.js"></script>
-	<script type="text/javascript" src="code/screen.js"></script>
-	<script type="text/javascript" src="code/images.js"></script>
-	<script type="text/javascript" src="code/npc.js"></script>
-	<script type="text/javascript" src="code/player.js"></script>
-	<script type="text/javascript" src="code/map.js"></script>
-	<script type="text/javascript" src="code/event.js"></script>
-	<script type="text/javascript" src="code/game.js"></script>
-</head>
+        <title>Loser Corps</title>
+        <link type="text/css" rel="stylesheet" href="css/style.css" />
 
-<body>
+        <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js"></script>
+        <script type="text/javascript" src="data/npc_def.js"></script>
+        <script type="text/javascript" src="code/array.js"></script>
+        <script type="text/javascript" src="code/message.js"></script>
+        <script type="text/javascript" src="code/collision.js"></script>
+        <script type="text/javascript" src="code/keyboard.js"></script>
+        <script type="text/javascript" src="code/screen.js"></script>
+        <script type="text/javascript" src="code/images.js"></script>
+        <script type="text/javascript" src="code/npc.js"></script>
+        <script type="text/javascript" src="code/player.js"></script>
+        <script type="text/javascript" src="code/map.js"></script>
+        <script type="text/javascript" src="code/event.js"></script>
+        <script type="text/javascript" src="code/game.js"></script>
+    </head>
 
-<div class="centerBox" id="overlay">
-<div id="options">
-	<form>
-	<input type="hidden" id="screen_size" name="screen_size" value="640x480">
-	<span>Map:</span>
-	<span>
-	<select id="select_map" name="select_map">
-			<option value="castle-16">Castle</option>
-			<option value="castle">Old castle</option>
-			<option value="arena">Arena</option>
-			<option value="arena3">Arena 3</option>
-			<option value="entrance">Entrance</option>
-		</select>
-	</span>
-	<span>Character:</span>
-	<span>
-		<select id="select_char" name="select_char">
-			<option value="loserboy">Loserboy</option>
-			<option value="punkman">Punkman</option>
-			<option value="stickman">Stickman</option>
-		</select>
-	</span>
-	<span><input type="button" value="Apply" onclick="game.reset()"></span>
-	</form>
-</div>
-</div>
+    <body>
 
-<canvas class="centerBox" id="screen" width="640" height="480"></canvas>
+        <div class="centerBox" id="overlay">
+            <div id="messages">
+            </div>
 
-<div id="debug"></div>
-</body>
+            <div id="options">
+                <form>
+                    <input type="hidden" id="screen_size" name="screen_size" value="640x480">
+                    <span>Map:</span>
+                    <span>
+                        <select id="select_map" name="select_map">
+                            <option value="castle-16">Castle</option>
+                            <option value="castle">Old castle</option>
+                            <option value="arena">Arena</option>
+                            <option value="arena3">Arena 3</option>
+                            <option value="entrance">Entrance</option>
+                        </select>
+                    </span>
+                    <span>Character:</span>
+                    <span>
+                        <select id="select_char" name="select_char">
+                            <option value="loserboy">Loserboy</option>
+                            <option value="punkman">Punkman</option>
+                            <option value="stickman">Stickman</option>
+                        </select>
+                    </span>
+                    <span>
+                        <input type="button" value="Apply" onclick="game.reset()">
+                    </span>
+                </form>
+            </div>
+        </div>
+
+        <canvas class="centerBox" id="screen" width="640" height="480">
+        </canvas>
+
+        <div id="debug">
+        </div>
+    </body>
 </html>
