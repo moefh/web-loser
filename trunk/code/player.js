@@ -27,6 +27,8 @@ function Player(npc, collision, keyboard)
     this.y = 0;
     this.dx = 0;
     this.dy = 0;
+    this.shooting = 0;
+    this.weapon_level = 0;
     this.frame = 0;
     this.client_frame = 0;
     this.npc = npc;
@@ -161,10 +163,6 @@ Player.prototype.input_jump_end = function() {
 };
 
 Player.prototype.fix_frame = function() {
-    //console.log("fix_frame: state=" + this.state + ", stand=" + Math.floor(this.def.stand.length/2) + ", walk=" + Math.floor(this.def.walk.length/2) + ", jump=" + Math.floor(this.def.jump.length/2));
-
-    //console.log("before fix_frame: client_frame=" + this.client_frame);
-
     switch (this.state) {
     case 0:  // PLAYER_ST_STAND
         this.frame %= this.def.stand.length;
@@ -174,6 +172,8 @@ Player.prototype.fix_frame = function() {
     case 1:  // PLAYER_ST_WALK
         this.frame %= this.def.walk.length;
         this.client_frame = this.def.walk[this.frame];
+        if (this.def.shoot_frame && this.shooting > 0)
+            this.client_frame += this.def.shoot_frame;
         break;
 
     case 2:  // PLAYER_ST_JUMP_START
@@ -273,6 +273,8 @@ Player.prototype.move = function(map) {
     //console.log("y=" + this.y);
     this.frame++;
     this.update_npc();
+    if (this.shooting > 0)
+        this.shooting--;
 };
 
 /**
@@ -310,17 +312,16 @@ Player.prototype.calc_step = function(game) {
     }
 
     if (this.keyboard.keyPressed(KEY_SHOOT)) {
-        var shot = game.add_npc(npc_def['missile'], shot_step);
-        shot.x = this.x;
-        shot.y = this.y + Math.floor(this.def.clip[1]/2);
+        this.shooting = 5;  // # of frames
+        var shot = game.add_npc(npc_def[this.def.weapons[this.weapon_level][1]], shot_step);
+        shot.x = this.x + Math.floor(this.def.clip[2]/2);
+        shot.y = this.y + this.def.weapons[this.weapon_level][0] - Math.floor(shot.def.clip[1]/2);
         shot.dir = this.dir;
+        shot.frame = 0;
         if (this.dir == DIR_LEFT) {
-            shot.x -= Math.floor(shot.def.w/2);
-            shot.frame = shot.def.mirror;
-        } else {
-            shot.x += Math.floor(shot.def.w/2);
-            shot.frame = 0;
-        }       
+            shot.x -= shot.def.clip[2];
+            shot.frame += shot.def.mirror;
+        }
     }
 };
 
