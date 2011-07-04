@@ -29,12 +29,27 @@ function Game() {
     var errTag = 'ERR';
     this.evt = new Event(errTag, this.error, this);
 
-    this.screen.show_message(10, 10, "Loading images...");
+    // Bind externalHandler to keydown
+    $(document).keydown($.proxy(this.externalHandler, this));
 
+    this.screen.show_message(10, 10, "Loading images...");
     var loadTag = 'IMG_LOADED';
     this.evt.bind(loadTag, this.reset, this);
     this.images.load(images_table, this.evt, loadTag);
 }
+/**
+ * externalHandler controls game flow events: pause, restart, etc
+ * @author Guto Motta
+ */
+Game.prototype.externalHandler = function(e){
+    var KEY_SPACE = 32;
+    switch(e.keyCode){
+        case KEY_SPACE:
+            self.togglePause();
+            break;
+        default:
+    }
+};
 
 Game.prototype.setViewport = function(w, h){
     this.viewport.width = w;
@@ -106,6 +121,25 @@ Game.prototype.start = function() {
     else
         this.player.set_state(5, 5, DIR_RIGHT);
 
+    // Resume also starts step loop
+    this.resume();
+};
+/**
+ * Pause/resume game with setInterval/clearInterval
+ * @author Guto Motta
+ */
+Game.prototype.togglePause = function(){
+    if(this.updater_id){
+        this.pause();
+    } else {
+        this.resume();
+    }
+};
+Game.prototype.pause = function(){
+    clearInterval(this.updater_id);
+    this.updater_id = 0;
+};
+Game.prototype.resume = function(){
     self = this;
     this.updater_id = setInterval(function (){
         self.step();
