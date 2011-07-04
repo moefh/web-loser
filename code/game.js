@@ -1,6 +1,12 @@
 var images_table = [ 'castle', 'castle3', 'loserboy', 'stickman', 'punkman', 'blacknight', 'power', 'sky' ];
 var game;
 
+function c_int(val) {
+    if (val >= 0)
+        return Math.floor(val);
+    return -Math.floor(-val);
+}
+
 /**
  * This class is responsible for controlling the whole state of the
  * game.

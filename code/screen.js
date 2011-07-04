@@ -21,6 +21,8 @@ function Screen(lw, lh, canvas)
     
     this.tile_w = 64 * this.scale_x;
     this.tile_h = 64 * this.scale_y;
+
+    this.message = "";
 }
 
 Screen.prototype.getSize = function(){
@@ -50,14 +52,14 @@ Screen.prototype.draw_map_bg = function(map) {
             this.ctx.drawImage(img, 0, 0, this.logical_w, this.logical_h);
         }
         else {
-            var x = Math.floor(this.x * (img.width - this.logical_w) / (map.w * 64 - this.logical_w));
-            var y = Math.floor(this.y * (img.height - this.logical_h) / (map.h * 64 - this.logical_h));
+            var x = c_int(this.x * (img.width - this.logical_w) / (map.w * 64 - this.logical_w));
+            var y = c_int(this.y * (img.height - this.logical_h) / (map.h * 64 - this.logical_h));
             this.ctx.drawImage(img, -x, -y);
         }
     }
     
-    var tile_start_x = Math.floor(this.x / 64);
-    var tile_start_y = Math.floor(this.y / 64);
+    var tile_start_x = c_int(this.x / 64);
+    var tile_start_y = c_int(this.y / 64);
     for (var y = 0; y < (this.logical_h/64)+1; y++) {
         for (var x = 0; x < (this.logical_w/64)+1; x++) {
             var pos_x = (64*x - this.x%64) * this.scale_x;
@@ -66,7 +68,7 @@ Screen.prototype.draw_map_bg = function(map) {
             var tile_id = map.bg_tile(tile_start_x + x, tile_start_y + y);
             if (tile_id != 0xffff) {
                 var tile_x = tile_id % 16;
-                var tile_y = Math.floor(tile_id / 16);
+                var tile_y = c_int(tile_id / 16);
                 this.ctx.drawImage(map.get_image(), tile_x*64, tile_y*64, 64, 64, pos_x, pos_y, this.tile_w, this.tile_h);
             }
         }
@@ -75,8 +77,8 @@ Screen.prototype.draw_map_bg = function(map) {
 
 Screen.prototype.draw_map_fg = function(map) {
     //debug("draw_map: screen_x=" + screen_x + ", screen_y=" + screen_y);
-    var tile_start_x = Math.floor(this.x / 64);
-    var tile_start_y = Math.floor(this.y / 64);
+    var tile_start_x = c_int(this.x / 64);
+    var tile_start_y = c_int(this.y / 64);
     for (var y = 0; y < (this.h/this.tile_h)+1; y++) {
         for (var x = 0; x < (this.w/this.tile_w)+1; x++) {
             var pos_x = (64*x - this.x%64) * this.scale_x;
@@ -85,7 +87,7 @@ Screen.prototype.draw_map_fg = function(map) {
             var tile_id = map.fg_tile(tile_start_x + x, tile_start_y + y);
             if (tile_id != 0xffff) {
                 var tile_x = tile_id % 16;
-                var tile_y = Math.floor(tile_id / 16);
+                var tile_y = c_int(tile_id / 16);
                 this.ctx.drawImage(map.get_image(), tile_x*64, tile_y*64, 64, 64, pos_x, pos_y, this.tile_w, this.tile_h);
             }
         }
@@ -94,7 +96,7 @@ Screen.prototype.draw_map_fg = function(map) {
 
 Screen.prototype.draw_frame = function(image, index, frame_w, frame_h, x, y) {
     var img_x = index % 16;
-    var img_y = Math.floor(index / 16);
+    var img_y = c_int(index / 16);
     this.ctx.drawImage(image, img_x*frame_w, img_y*frame_h, frame_w, frame_h,
                        x*this.scale_x, y*this.scale_y,
                        frame_w*this.scale_x, frame_h*this.scale_y);
