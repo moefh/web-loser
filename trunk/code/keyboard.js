@@ -1,4 +1,8 @@
-
+/**
+ * @class Keyboard
+ * Keyboard handler
+ * @author Guto Motta
+ */
 var KEY_UP = 38;
 var KEY_DOWN = 40;
 var KEY_LEFT = 37;
@@ -25,17 +29,6 @@ Keyboard.prototype.keyDown = function(key){
 }
 Keyboard.prototype.keyWait = function(key){
     return(this.keys_wait.indexOf(key) >= 0);
-}
-/*
- * Removes element E from array
- * Array method, maybe place it somewhere else?
- */
-Array.prototype.remove = function(e){
-    var idx = this.indexOf(e);
-    if(idx >= 0){
-        this[idx] = this[this.length - 1];
-        this.length--;
-    }
 }
 /*
  * Keydown handler
