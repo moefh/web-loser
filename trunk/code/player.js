@@ -223,8 +223,8 @@ Player.prototype.move = function(map) {
         this.dy += DEC_JUMP_SPEED;
 
     // calculate movement
-    var try_dx = Math.floor(this.dx/1000);
-    var try_dy = Math.floor(this.dy/1000);
+    var try_dx = c_int(this.dx/1000);
+    var try_dy = c_int(this.dy/1000);
     var delta = this.collision.calc_movement(map, this.x, this.y, this.def.clip[2], this.def.clip[3], try_dx, try_dy);
     if (delta && delta[1] != try_dy) {
         if (try_dy > 0) { 
@@ -237,7 +237,7 @@ Player.prototype.move = function(map) {
         }
     }
     if (delta && delta[0] != try_dx)
-        this.apply_floor_friction(Math.floor(DEC_WALK_SPEED/2));
+        this.apply_floor_friction(c_int(DEC_WALK_SPEED/2));
 
     // move
     if (delta) {
@@ -295,9 +295,9 @@ function shot_step(game) {
         return;
     }
     if (this.dir == DIR_LEFT)
-        this.x -= 2*Math.floor(MAX_WALK_SPEED/1000);
+        this.x -= 2*c_int(MAX_WALK_SPEED/1000);
     else
-        this.x += 2*Math.floor(MAX_WALK_SPEED/1000);
+        this.x += 2*c_int(MAX_WALK_SPEED/1000);
 }
 
 /**
@@ -314,8 +314,8 @@ Player.prototype.calc_step = function(game) {
     if (this.keyboard.keyPressed(KEY_SHOOT)) {
         this.shooting = 5;  // # of frames
         var shot = game.add_npc(npc_def[this.def.weapons[this.weapon_level][1]], shot_step);
-        shot.x = this.x + Math.floor(this.def.clip[2]/2);
-        shot.y = this.y + this.def.weapons[this.weapon_level][0] - Math.floor(shot.def.clip[1]/2);
+        shot.x = this.x + c_int(this.def.clip[2]/2);
+        shot.y = this.y + this.def.weapons[this.weapon_level][0] - c_int(shot.def.clip[1]/2);
         shot.dir = this.dir;
         shot.frame = 0;
         if (this.dir == DIR_LEFT) {

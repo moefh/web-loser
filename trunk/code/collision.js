@@ -42,8 +42,8 @@ Collision.prototype.clip_rect = function(initial, delta, block) {
 
 Collision.prototype.get_block_rect = function(map, x, y) {
     if (map.point_is_blocked(x, y)) {
-        var bx = Math.floor(x/32);
-        var by = Math.floor(y/32);
+        var bx = c_int(x/32);
+        var by = c_int(y/32);
         //return [ 32*bx, 32*by, 31, 31 ];
         return [ 32*bx, 32*by, 31, 31 ];
     }
@@ -109,16 +109,16 @@ Collision.prototype.calc_movement = function(map, x, y, w, h, dx, dy)
     var initial = [ x, y, w, h ];
 
     var vertices = [
-        [ x,                  y ],
-        [ x+Math.floor(w/2),  y ],
-        [ x+w-1,              y ],
+        [ x,             y ],
+        [ x+c_int(w/2),  y ],
+        [ x+w-1,         y ],
         
-        [ x,                  y+Math.floor(h/2) ],
-        [ x+w-1,              y+Math.floor(h/2) ],
+        [ x,             y+c_int(h/2) ],
+        [ x+w-1,         y+c_int(h/2) ],
         
-        [ x,                  y+h-1],
-        [ x+Math.floor(w/2),  y+h-1],
-        [ x+w-1,              y+h-1]
+        [ x,             y+h-1],
+        [ x+c_int(w/2),  y+h-1],
+        [ x+w-1,         y+h-1]
     ];
     var delta = [ dx, dy ];
 
