@@ -26,10 +26,10 @@ Keyboard.prototype.keyPressed = function(key){
 };
 Keyboard.prototype.keyDown = function(key){
     return(this.keys_down.indexOf(key) >= 0);
-}
+};
 Keyboard.prototype.keyWait = function(key){
     return(this.keys_wait.indexOf(key) >= 0);
-}
+};
 /*
  * Keydown handler
  */
