@@ -34,6 +34,21 @@ Screen.prototype.show_message = function(x, y, msg) {
 
 Screen.prototype.draw_map_bg = function(map) {
     //debug("draw_map: screen_x=" + screen_x + ", screen_y=" + screen_y);
+    
+    // draw background image
+    // TODO: large viewport screws this
+    if (map.get_bg_image() != null) {
+        var img = map.get_bg_image();
+        if (img.width < this.logical_w || img.height < this.logical_h) {
+            this.ctx.drawImage(img, 0, 0, this.logical_w, this.logical_h);
+        }
+        else {
+            var x = Math.floor(this.x * (img.width - this.logical_w) / (map.w * 64 - this.logical_w));
+            var y = Math.floor(this.y * (img.height - this.logical_h) / (map.h * 64 - this.logical_h));
+            this.ctx.drawImage(img, -x, -y);
+        }
+    }
+    
     var tile_start_x = Math.floor(this.x / 64);
     var tile_start_y = Math.floor(this.y / 64);
     for (var y = 0; y < (this.logical_h/64)+1; y++) {
