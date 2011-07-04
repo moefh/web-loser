@@ -11,8 +11,9 @@
 #overlay {
 	z-index: 1;
 }
-#messages p {
+#messages span {
     display: inline;
+    cursor: pointer;
     color: white;
     background: black;
     font-family: verdana, sans-serif;

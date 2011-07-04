@@ -7,17 +7,25 @@
 var DEFAULT_WIDTH = 640;
 var DEFAULT_HEIGHT = 480;
 
-function Browser(screen) {
+function Browser(screen, event) {
     this.screen = screen;
+    this.event = event;
     this.fullScreen = 0;
     this.growScreen();
+    
+    $(window).resize($.proxy(this.growScreen, this));
+    
+    $('#messages').click(function(){
+        self.event.trigger('OSD_CLICK');
+    });
 }
 /**
  * Handles OSD for simple text messages
  */
 Browser.prototype.osd = function(msg){
+    self = this;
     $('#messages').hide();
-    $('#messages').empty().append('<p>'+msg+'</p>');
+    $('#messages').empty().append('<span>'+msg+'</span>');
     $('#messages').fadeIn('fast');
 };
 Browser.prototype.osdClear = function(){
