@@ -15,6 +15,7 @@ function Browser(screen, event) {
     
     $(window).resize($.proxy(this.growScreen, this));
     
+    self = this;
     $('#messages').click(function(){
         self.event.trigger('OSD_CLICK');
     });
@@ -23,7 +24,6 @@ function Browser(screen, event) {
  * Handles OSD for simple text messages
  */
 Browser.prototype.osd = function(msg){
-    self = this;
     $('#messages').hide();
     $('#messages').empty().append('<span>'+msg+'</span>');
     $('#messages').fadeIn('fast');
