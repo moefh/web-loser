@@ -12,22 +12,25 @@
 	z-index: 1;
 }
 #messages span {
-    display: inline;
     cursor: pointer;
-    color: white;
-    background: black;
+    display: block;
     font-family: verdana, sans-serif;
     font-size: 30px;
-    padding: 20px 20px;
-    -webkit-border-radius: 5px;
-    -moz-border-radius: 5px;
-    border-radius: 5px;
+    
+    position: absolute;
+    text-align: center;
+    left: 50%;
+    top: 50%;
+
+    -webkit-border-radius: 15px;
+    -moz-border-radius: 15px;
+    border-radius: 15px;
+
+    background: black;
+    color: white;
     opacity: 0.75;
 }
 #messages {
-    position: relative;
-    text-align: center;
-    top: 50%;
 }
 #options {
 	position: absolute;
