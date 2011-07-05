@@ -111,7 +111,7 @@ Screen.prototype.draw_npcs = function(images, npcs, follow_npc) {
 
 Screen.prototype.draw_minimap = function(map, npc) {
     var mmx = this.w - 2*map.w - 5;
-    var mmy = 5;
+    var mmy = this.h - 2*map.h - 5;
     this.ctx.globalAlpha = 0.66;
     this.ctx.drawImage(map.minimap, mmx, mmy);
     this.ctx.globalAlpha = 1;
