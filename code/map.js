@@ -74,6 +74,35 @@ Map.prototype.get_spawn_points = function(clip_data) {
     return spawns;
 };
 
+Map.prototype.build_minimap = function() {
+    var img = document.createElement('canvas');
+    img.width = 2*this.w;
+    img.height = 2*this.h;
+
+    var c = img.getContext('2d');
+    c.fillStyle = '#000000';
+    c.fillRect(0, 0, img.width, img.height);
+
+    return img;
+};
+
+Map.prototype.reveal_minimap = function(x, y, w, h) {
+    var c = this.minimap.getContext('2d');
+    for (var i = 0; i < h; i++) {
+        for (var j = 0; j < w; j++) {
+            var pos_x = x + j;
+            var pos_y = y + i;
+            if (pos_x < 0 || pos_x >= 2*this.w || pos_y < 0 || pos_y >= 2*this.h)
+                continue;
+            if (this.clip_map[pos_y][pos_x])
+                c.fillStyle = '#8888ff';
+            else
+                c.fillStyle = '#222266';
+            c.fillRect(pos_x, pos_y, 1, 1);
+        }
+    }
+};
+
 Map.prototype.load_parse = function(data, images, events, tag) {
     try {
         if (data.tile_size[0] != 64|| data.tile_size[1] != 64)
@@ -127,6 +156,7 @@ Map.prototype.load_parse = function(data, images, events, tag) {
         this.clip = data.clipping;
         this.clip_map = this.build_clipping_map(data.clipping);
         this.spawn_points = this.get_spawn_points(data.clipping);
+        this.minimap = this.build_minimap();
     }
     catch (e) {
         events.error("error parsing map:\n" + e);

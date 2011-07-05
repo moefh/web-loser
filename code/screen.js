@@ -10,6 +10,8 @@ function Screen(lw, lh, canvas)
     this.ctx = canvas.getContext('2d');    
     this.canvas.width = this.w;
     this.canvas.height = this.h;
+
+    this.enable_minimap = true;
 }
 
 Screen.prototype.getSize = function(){
@@ -107,6 +109,18 @@ Screen.prototype.draw_npcs = function(images, npcs, follow_npc) {
         this.draw_npc(images, follow_npc);
 };
 
+Screen.prototype.draw_minimap = function(map, npc) {
+    var mmx = this.w - 2*map.w - 5;
+    var mmy = 5;
+    this.ctx.globalAlpha = 0.66;
+    this.ctx.drawImage(map.minimap, mmx, mmy);
+    this.ctx.globalAlpha = 1;
+    if (npc != null) {
+        this.ctx.fillStyle = "#ffffff";
+        this.ctx.fillRect(mmx + c_int(npc.x/32), mmy + c_int(npc.y/32), 2, 2);
+    }
+};
+
 Screen.prototype.draw = function(images, map, npcs, follow_npc) {
     // change the screen position to follow a NPC, if necessary
     if (follow_npc != null) {
@@ -129,8 +143,13 @@ Screen.prototype.draw = function(images, map, npcs, follow_npc) {
     if (this.y > map.h * 64 - this.h)
         this.y = map.h * 64 - this.h;
     
+    if (this.enable_minimap)
+        map.reveal_minimap(c_int(this.x/32), c_int(this.y/32), c_int(this.w/32)+1, c_int(this.h/32)+1);
+
     // draw everything
     this.draw_map_bg(map);
     this.draw_npcs(images, npcs, follow_npc);
     this.draw_map_fg(map);
+    if (this.enable_minimap)
+        this.draw_minimap(map, follow_npc);
 };
