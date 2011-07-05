@@ -22,13 +22,13 @@ function Map(name)
  * Load the map via XMLHttpRequest. The image required by the map (the
  * tileset) must be already loaded in the images object.
  */
-Map.prototype.load = function(images, events, tag) { 
+Map.prototype.load = function(game, images, events, tag) { 
     //this.load_request(images, ok_func, err_func);
     var self = this;
     var url = 'maps/' + this.name + '.js';
     $.getJSON(url,
               function(data) {
-                  self.load_parse(data, images, events, tag);
+                  self.load_parse(data, game, images, events, tag);
               }).error(function(jqXHR, message, what) {
                   events.error("Can't load map from '" + url + "': error " + what);
               });
@@ -111,7 +111,7 @@ Map.prototype.reveal_minimap = function(x, y, w, h) {
     }
 };
 
-Map.prototype.load_parse = function(data, images, events, tag) {
+Map.prototype.load_parse = function(data, game, images, events, tag) {
     try {
         if (data.tile_size[0] != 64|| data.tile_size[1] != 64)
             throw "invalid tile size";
@@ -165,6 +165,16 @@ Map.prototype.load_parse = function(data, images, events, tag) {
         this.clip_map = this.build_clipping_map(data.clipping);
         this.spawn_points = this.get_spawn_points(data.clipping);
         this.minimap = this.build_minimap();
+        
+        // insert all NPCs from the map that are part of npc_def into Game
+        for (var i in data.objects) {
+            if (data.objects[i].npc in npc_def) {
+                var npc = game.add_npc(npc_def[data.objects[i].npc],
+                                       function () { });
+                npc.x = data.objects[i].x;
+                npc.y = data.objects[i].y;
+            }
+        }
     }
     catch (e) {
         events.error("error parsing map:\n" + e);

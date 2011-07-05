@@ -11,6 +11,9 @@ var images_table = [
     // missiles
     'power',
 
+	// power-ups
+	'power-up', 'energy',
+	
     // interface stuff
     'status-bar'
 ];
@@ -116,7 +119,7 @@ Game.prototype.reset = function() {
 
     var loadTag = 'MAP_LOADED';
     this.evt.bind(loadTag, this.start, this);
-    this.map.load(this.images, this.evt, loadTag);
+    this.map.load(this, this.images, this.evt, loadTag);
 };
 
 /**

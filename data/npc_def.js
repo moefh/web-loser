@@ -78,6 +78,30 @@ var npc_def = {
 	stand : [ 0 ],
 	jump : [ 0 ],
 	walk : [ 0 ]
+    },
+
+    "power-up" : {
+	image : "power-up",
+	w : 32,
+	h : 19,
+	clip : [ 0, 0, 30, 17 ],
+
+	mirror : 1,
+	stand : [ 0 ],
+	jump : [ 0 ],
+	walk : [ 0 ]
+    },
+    
+    "energy" : {
+	image : "energy",
+	w : 32,
+	h : 19,
+	clip : [ 0, 0, 30, 17 ],
+
+	mirror : 1,
+	stand : [ 0 ],
+	jump : [ 0 ],
+	walk : [ 0 ]
     }
 
 };
