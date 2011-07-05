@@ -1,4 +1,20 @@
-var images_table = [ 'castle', 'castle3', 'loserboy', 'stickman', 'punkman', 'blacknight', 'power', 'sky' ];
+var images_table = [
+    // map tiles
+    'castle', 'castle3',
+
+    // background images
+    'sky',
+    
+    // characters
+    'loserboy', 'stickman', 'punkman', 'blacknight',
+
+    // missiles
+    'power',
+
+    // interface stuff
+    'status-bar'
+];
+
 var game;
 
 function c_int(val) {
@@ -156,7 +172,7 @@ Game.prototype.step = function(n) {
             if (this.npcs[npc_id].step_func)
                 this.npcs[npc_id].step_func.call(this.npcs[npc_id], this);
         }
-        this.screen.draw(this.images, this.map, this.npcs, this.player.npc);
+        this.screen.draw(this.images, this.map, this.npcs, this.player);
         this.keyboard.update();
     }
 };
