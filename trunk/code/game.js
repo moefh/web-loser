@@ -44,6 +44,7 @@ function Game() {
 Game.prototype.externalHandler = function(e){
     var KEY_SPACE = 32;
     var KEY_F = 70;
+    var KEY_M = 77;
     switch(e.keyCode){
         case KEY_SPACE:
             this.togglePause();
@@ -51,8 +52,10 @@ Game.prototype.externalHandler = function(e){
         case KEY_F:
             this.browser.toggleFullScreen();
             break;
+        case KEY_M:
+            this.screen.toggleMiniMap();
         default:
-            console.log(e.keyCode);
+//            console.log(e.keyCode);
     }
 };
 

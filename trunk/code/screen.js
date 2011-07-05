@@ -121,6 +121,10 @@ Screen.prototype.draw_minimap = function(map, npc) {
     }
 };
 
+Screen.prototype.toggleMiniMap = function(){
+    this.enable_minimap = (this.enable_minimap+1)%2;
+};
+
 Screen.prototype.draw = function(images, map, npcs, follow_npc) {
     // change the screen position to follow a NPC, if necessary
     if (follow_npc != null) {
@@ -143,8 +147,7 @@ Screen.prototype.draw = function(images, map, npcs, follow_npc) {
     if (this.y > map.h * 64 - this.h)
         this.y = map.h * 64 - this.h;
     
-    if (this.enable_minimap)
-        map.reveal_minimap(c_int(this.x/32), c_int(this.y/32), c_int(this.w/32)+1, c_int(this.h/32)+1);
+    map.reveal_minimap(c_int(this.x/32), c_int(this.y/32), c_int(this.w/32)+1, c_int(this.h/32)+1);
 
     // draw everything
     this.draw_map_bg(map);
