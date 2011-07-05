@@ -3,12 +3,7 @@ In no particular order:
 
 *) Minimap
 
-Draw a small rectangle on the corner of the screen showing a small
-version of the current map.  In the original Loser Corps the image was
-based on the collision map (available in this version as 'map.clip'),
-not the map tiles, but this might be changed.
-
-Transparency would be nice.
+Improve minimap, it's too ugly.
 
 
 *) Map objects
