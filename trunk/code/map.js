@@ -87,17 +87,25 @@ Map.prototype.build_minimap = function() {
 };
 
 Map.prototype.reveal_minimap = function(x, y, w, h) {
+    var block_fillstyle = '#8888ff';
+    var space_fillstyle = '#222266';
+
     var c = this.minimap.getContext('2d');
+    c.fillStyle = block_fillstyle;
+
     for (var i = 0; i < h; i++) {
         for (var j = 0; j < w; j++) {
             var pos_x = x + j;
             var pos_y = y + i;
             if (pos_x < 0 || pos_x >= 2*this.w || pos_y < 0 || pos_y >= 2*this.h)
                 continue;
-            if (this.clip_map[pos_y][pos_x])
-                c.fillStyle = '#8888ff';
-            else
-                c.fillStyle = '#222266';
+            if (this.clip_map[pos_y][pos_x]) {
+                if (c.fillStyle != block_fillstyle)
+                    c.fillStyle = block_fillstyle;
+            } else {
+                if (c.fillStyle != space_fillstyle)
+                    c.fillStyle = space_fillstyle;
+            }
             c.fillRect(pos_x, pos_y, 1, 1);
         }
     }

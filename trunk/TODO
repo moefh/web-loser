@@ -1,6 +1,11 @@
 
 In no particular order:
 
+*) Player health
+
+Implement player attributes like health and weapon power level.
+
+
 *) Minimap
 
 Improve minimap, it's too ugly.
