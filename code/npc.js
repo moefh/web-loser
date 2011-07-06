@@ -31,6 +31,26 @@ NPC.prototype.get_img_y = function() {
     return this.y - this.def.clip[1] + 1;
 };
 
+NPC.prototype.get_clip_rect = function () {
+    // TODO: take into accound DIR_LEFT and DIR_RIGHT
+    var x0 = this.x + this.def.clip[0];
+    var y0 = this.y + this.def.clip[1];
+    var x1 = this.x + this.def.clip[2];
+    var y1 = this.y + this.def.clip[3];
+    return [x0, y0, x1, y1];
+}
+
+NPC.prototype.collides_with = function (other) {
+    var mypos = this.get_clip_rect();
+    var otherpos = other.get_clip_rect();
+    
+    // check intersection
+    if (mypos[2] < otherpos[0] || mypos[3] < otherpos[1] || mypos[0] > otherpos[2] || mypos[1] > otherpos[3])
+        return false;
+    else
+        return true;
+}
+
 var npc_behavior = {};
 
 npc_behavior.missile = function(game) {
@@ -48,7 +68,13 @@ npc_behavior.energy = function(game) {
     var t = 2 * Math.PI * ((game.frame_counter % 20) / 20);
     this.y += c_int(2 * Math.cos(t));
 
-    // TODO: check if player got energy
+    for (var i in game.npcs) {
+        if (!(game.npcs[i] === this) && this.collides_with(game.npcs[i])) {
+            game.remove_npc(this);
+            // TODO: is this a player?
+            // TODO: add energy to player
+        }
+    }
 };
 
 npc_behavior['power-up'] = function(game) {

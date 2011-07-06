@@ -24,6 +24,7 @@ function c_int(val) {
 function Game() {
     this.player = null;
     this.npcs = null;
+    this.respawn_list = null;
     this.next_npc_id = 0;
     this.map = null;
     this.updater_id = null;
@@ -103,6 +104,7 @@ Game.prototype.reset = function() {
     var sel_char = document.getElementById("select_char").value;
     
     this.screen.show_message(10, 10, "Loading characters...");
+    this.respawn_list = [];
     this.npcs = {};
     var player_npc = this.add_npc(npc_def[sel_char],
                                   function() {
@@ -170,6 +172,7 @@ Game.prototype.step = function(n) {
         n = 1;
     for (var x = 0; x < n; x++) {
         this.frame_counter++;
+        this.respawn_npcs();
         for (var npc_id in this.npcs) {
             if (this.npcs[npc_id].step_func)
                 this.npcs[npc_id].step_func.call(this.npcs[npc_id], this);
@@ -188,11 +191,31 @@ Game.prototype.add_npc = function(npc_def, handler) {
 Game.prototype.remove_npc = function(npc) {
     for (var npc_id in this.npcs)
         if (this.npcs[npc_id] == npc) {
+            // if may respawn, keep on a side list
+            if (this.npcs[npc_id].respawn) {
+                var npc = this.npcs[npc_id];
+                npc.respawn_at = (new Date()).getTime() + (npc.respawn * 1000);
+                this.respawn_list.push(npc);
+            }
             delete this.npcs[npc_id];
             return true;
         }
     return false;
 };
+
+/*
+ * Scan the list of NPCs waiting for respawn, and bring some back to life !!!
+ */
+Game.prototype.respawn_npcs = function () {
+    var now = (new Date()).getTime();
+    for (var i in this.respawn_list) {
+        var npc = this.respawn_list[i];
+        if (npc.respawn_at <= now) {
+            delete this.respawn_list[i];
+            this.npcs[this.next_npc_id++] = npc;
+        }
+    }
+}
 
 /*
  * Start game after DOM is loaded
