@@ -169,8 +169,7 @@ Map.prototype.load_parse = function(data, game, images, events, tag) {
         // insert all NPCs from the map that are part of npc_def into Game
         for (var i in data.objects) {
             if (data.objects[i].npc in npc_def) {
-                var npc = game.add_npc(npc_def[data.objects[i].npc],
-                                       npc_behavior[data.objects[i].npc]);
+                var npc = game.add_npc(data.objects[i].npc);
                 npc.x = data.objects[i].x;
                 npc.y = data.objects[i].y;
                 npc.respawn = data.objects[i].respawn;

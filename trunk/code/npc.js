@@ -2,7 +2,47 @@
 /**
  * An NPC is any object of the game (player, enemy, item, etc).
  */
-function NPC(def, step_func) {
+function NPC() {
+}
+
+NPC.make = function(type) {
+    var npc;
+    switch (type) {
+    case "loserboy":
+    case "punkman":
+    case "stickman":
+    case "blacknight":
+        npc = new NPCCharacter();
+        break;
+
+    case "missile":
+        npc = new NPCMissile();
+        break;
+
+    case "energy":
+        npc = new NPCEnergy();
+        break;
+
+    case "power-up":
+        npc = new NPCPowerUp();
+        break;
+
+    case "tele/teleporter":
+        npc = new NPCTeleporter();
+        break;
+
+    default:
+        npc = new NPC();
+        break;
+    }
+
+    npc.init(type);
+    return npc;
+}
+
+NPC.prototype.init = function(type) {
+    this.type = type;
+
     // logical position on map
     this.x = 0;
     this.y = 0;
@@ -14,11 +54,8 @@ function NPC(def, step_func) {
     this.frame = 0;
 
     // npc definition data
-    this.def = def;
-
-    // step function
-    this.step_func = step_func;
-}
+    this.def = npc_def[type];
+};
 
 NPC.prototype.get_img_x = function() {
     if (this.dir == DIR_LEFT)
@@ -51,9 +88,35 @@ NPC.prototype.collides_with = function (other) {
         return true;
 }
 
-var npc_behavior = {};
+NPC.prototype.step = function(game) {
+};
 
-npc_behavior.missile = function(game) {
+NPC.prototype.collects_items = function() {
+    return false;
+}
+
+/**
+ * Character: an NPC controlled by the player.
+ */
+function NPCCharacter() {}
+NPCCharacter.prototype = new NPC();
+
+NPCCharacter.prototype.collects_items = function() {
+    return true;
+}
+
+NPCCharacter.prototype.step = function(game) {
+    this.player.calc_step(game);
+    this.player.move(game.map);
+};
+
+/**
+ * Missile
+ */
+function NPCMissile() {}
+NPCMissile.prototype = new NPC();
+
+NPCMissile.prototype.step = function(game) {
     if (game.collision.check_collision(game.map, this.x + this.def.clip[0], this.y + this.def.clip[1], this.def.clip[2], this.def.clip[3])) {
         game.remove_npc(this);
         return;
@@ -64,27 +127,44 @@ npc_behavior.missile = function(game) {
         this.x += 2*c_int(MAX_WALK_SPEED/1000);
 };
 
-npc_behavior.energy = function(game) {
+/**
+ * Energy
+ */
+function NPCEnergy() {}
+NPCEnergy.prototype = new NPC();
+
+NPCEnergy.prototype.step = function(game) {
     var t = 2 * Math.PI * ((game.frame_counter % 20) / 20);
     this.y += c_int(2 * Math.cos(t));
 
     for (var i in game.npcs) {
-        if (!(game.npcs[i] === this) && this.collides_with(game.npcs[i])) {
+        if (!(game.npcs[i] === this) && game.npcs[i].collects_items() && this.collides_with(game.npcs[i])) {
             game.remove_npc(this);
-            // TODO: is this a player?
             // TODO: add energy to player
         }
     }
 };
 
-npc_behavior['power-up'] = function(game) {
+/**
+ * PowerUp
+ */
+function NPCPowerUp() {}
+NPCPowerUp.prototype = new NPC();
+
+NPCPowerUp.prototype.step = function(game) {
     var t = 2 * Math.PI * ((game.frame_counter % 20) / 20);
     this.y += c_int(2 * Math.cos(t));
 
     // TODO: check if player got power-up
 };
 
-npc_behavior['tele/teleporter'] = function(game) {
+/**
+ * Teleporter
+ */
+function NPCTeleporter() {}
+NPCTeleporter.prototype = new NPC();
+
+NPCTeleporter.prototype.step = function(game) {
     var t = 2 * Math.PI * ((game.frame_counter % 22) / 22);
     this.frame = c_int(1.55 + 1.55 * Math.cos(t));
 
