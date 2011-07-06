@@ -5,15 +5,6 @@ var images_table = [
     // background images
     'sky',
     
-    // characters
-    'loserboy', 'stickman', 'punkman', 'blacknight',
-
-    // missiles
-    'power',
-
-	// power-ups
-	'power-up', 'energy',
-	
     // interface stuff
     'status-bar'
 ];
@@ -52,6 +43,11 @@ function Game() {
     // Bind externalHandler to keydown
     $(document).keydown($.proxy(this.externalHandler, this));
 
+    // add images from npcs
+    for (var i in npc_def) {
+        if (images_table.indexOf(npc_def[i].image) < 0)
+            images_table.push(npc_def[i].image);
+    }
     this.screen.show_message(10, 10, "Loading images...");
     var loadTag = 'IMG_LOADED';
     this.evt.bind(loadTag, this.reset, this);
