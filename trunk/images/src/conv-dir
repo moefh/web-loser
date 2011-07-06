@@ -1,0 +1,18 @@
+#!/bin/sh
+
+in_dir=$1
+out_dir=$2
+
+if [ -z "$in_dir" -o -z "$out_dir" ]; then
+    echo "USAGE: $0 in_dir out_dir"
+    exit 1
+fi
+
+for in in $in_dir/*.spr; do
+    out=$(basename $in .spr)
+    echo $out
+    if ! ./conv-single $in $out_dir/$out.png >/dev/null; then
+       ./conv $in $out_dir/$out.png
+    fi
+done
+

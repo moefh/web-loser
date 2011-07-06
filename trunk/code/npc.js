@@ -58,3 +58,9 @@ npc_behavior['power-up'] = function(game) {
     // TODO: check if player got power-up
 };
 
+npc_behavior['tele/teleporter'] = function(game) {
+    var t = 2 * Math.PI * ((game.frame_counter % 22) / 22);
+    this.frame = c_int(1.55 + 1.55 * Math.cos(t));
+
+    // TODO: check and teleport player to target
+};
