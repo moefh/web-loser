@@ -170,7 +170,7 @@ Map.prototype.load_parse = function(data, game, images, events, tag) {
         for (var i in data.objects) {
             if (data.objects[i].npc in npc_def) {
                 var npc = game.add_npc(npc_def[data.objects[i].npc],
-                                       function () { });
+                                       npc_behavior[data.objects[i].npc]);
                 npc.x = data.objects[i].x;
                 npc.y = data.objects[i].y;
             }

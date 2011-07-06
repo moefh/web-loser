@@ -30,3 +30,31 @@ NPC.prototype.get_img_x = function() {
 NPC.prototype.get_img_y = function() {
     return this.y - this.def.clip[1] + 1;
 };
+
+var npc_behavior = {};
+
+npc_behavior.missile = function(game) {
+    if (game.collision.check_collision(game.map, this.x + this.def.clip[0], this.y + this.def.clip[1], this.def.clip[2], this.def.clip[3])) {
+        game.remove_npc(this);
+        return;
+    }
+    if (this.dir == DIR_LEFT)
+        this.x -= 2*c_int(MAX_WALK_SPEED/1000);
+    else
+        this.x += 2*c_int(MAX_WALK_SPEED/1000);
+};
+
+npc_behavior.energy = function(game) {
+    var t = 2 * Math.PI * ((game.frame_counter % 20) / 20);
+    this.y += c_int(2 * Math.cos(t));
+
+    // TODO: check if player got energy
+};
+
+npc_behavior['power-up'] = function(game) {
+    var t = 2 * Math.PI * ((game.frame_counter % 20) / 20);
+    this.y += c_int(2 * Math.cos(t));
+
+    // TODO: check if player got power-up
+};
+

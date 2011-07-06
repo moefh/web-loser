@@ -39,7 +39,8 @@ function Game() {
     
     this.width = 480;
     this.height = 360;
-
+    this.frame_counter = 0;
+    
     this.collision = new Collision();
     this.keyboard = new Keyboard();
     this.screen = new Screen(this.width, this.height, document.getElementById('screen'));
@@ -129,6 +130,7 @@ Game.prototype.reset = function() {
  * This method is called automatically by reset().
  */
 Game.prototype.start = function() {
+    this.frame_counter = 0;
     this.player.load_map_parameters(this.map);
     var spawn = this.map.spawn_points[0];
     if (spawn)
@@ -171,6 +173,7 @@ Game.prototype.step = function(n) {
     if (! n)
         n = 1;
     for (var x = 0; x < n; x++) {
+        this.frame_counter++;
         for (var npc_id in this.npcs) {
             if (this.npcs[npc_id].step_func)
                 this.npcs[npc_id].step_func.call(this.npcs[npc_id], this);

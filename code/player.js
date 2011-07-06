@@ -289,17 +289,6 @@ Player.prototype.update_npc = function() {
     this.npc.frame = this.client_frame;
 };
 
-function shot_step(game) {
-    if (game.collision.check_collision(game.map, this.x + this.def.clip[0], this.y + this.def.clip[1], this.def.clip[2], this.def.clip[3])) {
-        game.remove_npc(this);
-        return;
-    }
-    if (this.dir == DIR_LEFT)
-        this.x -= 2*c_int(MAX_WALK_SPEED/1000);
-    else
-        this.x += 2*c_int(MAX_WALK_SPEED/1000);
-}
-
 /**
  * Compute one step of the player.
  */
@@ -313,7 +302,8 @@ Player.prototype.calc_step = function(game) {
 
     if (this.keyboard.keyPressed(KEY_SHOOT)) {
         this.shooting = 5;  // # of frames
-        var shot = game.add_npc(npc_def[this.def.weapons[this.weapon_level][1]], shot_step);
+        var shot_npc_name = this.def.weapons[this.weapon_level][1];
+        var shot = game.add_npc(npc_def[shot_npc_name], npc_behavior[shot_npc_name]);
         shot.x = this.x + c_int(this.def.clip[2]/2);
         shot.y = this.y + this.def.weapons[this.weapon_level][0] - c_int(shot.def.clip[1]/2);
         shot.dir = this.dir;
