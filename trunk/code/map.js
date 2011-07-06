@@ -173,6 +173,7 @@ Map.prototype.load_parse = function(data, game, images, events, tag) {
                                        npc_behavior[data.objects[i].npc]);
                 npc.x = data.objects[i].x;
                 npc.y = data.objects[i].y;
+                npc.respawn = data.objects[i].respawn;
             }
         }
     }
