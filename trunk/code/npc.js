@@ -134,8 +134,10 @@ function NPCEnergy() {}
 NPCEnergy.prototype = new NPC();
 
 NPCEnergy.prototype.step = function(game) {
+    if (typeof(this.start_y) == "undefined")
+        this.start_y = this.y;
     var t = 2 * Math.PI * ((game.frame_counter % 20) / 20);
-    this.y += c_int(2 * Math.cos(t));
+    this.y = this.start_y + c_int(4 * Math.cos(t));
 
     for (var i in game.npcs) {
         if (!(game.npcs[i] === this) && game.npcs[i].collects_items() && this.collides_with(game.npcs[i])) {
@@ -152,8 +154,10 @@ function NPCPowerUp() {}
 NPCPowerUp.prototype = new NPC();
 
 NPCPowerUp.prototype.step = function(game) {
+    if (typeof(this.start_y) == "undefined")
+        this.start_y = this.y;
     var t = 2 * Math.PI * ((game.frame_counter % 20) / 20);
-    this.y += c_int(2 * Math.cos(t));
+    this.y = this.start_y + c_int(4 * Math.cos(t));
 
     // TODO: check if player got power-up
 };
