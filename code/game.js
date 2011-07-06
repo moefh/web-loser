@@ -106,11 +106,7 @@ Game.prototype.reset = function() {
     this.screen.show_message(10, 10, "Loading characters...");
     this.respawn_list = [];
     this.npcs = {};
-    var player_npc = this.add_npc(npc_def[sel_char],
-                                  function() {
-                                      self.player.calc_step(self);
-                                      self.player.move(self.map);
-                                  });
+    var player_npc = this.add_npc(sel_char);
     this.player = new Player(player_npc, this.collision, this.keyboard);
 
     this.screen.show_message(10, 10, "Loading map...");
@@ -173,17 +169,15 @@ Game.prototype.step = function(n) {
     for (var x = 0; x < n; x++) {
         this.frame_counter++;
         this.respawn_npcs();
-        for (var npc_id in this.npcs) {
-            if (this.npcs[npc_id].step_func)
-                this.npcs[npc_id].step_func.call(this.npcs[npc_id], this);
-        }
+        for (var npc_id in this.npcs)
+            this.npcs[npc_id].step(this);
         this.screen.draw(this.images, this.map, this.npcs, this.player);
         this.keyboard.update();
     }
 };
 
-Game.prototype.add_npc = function(npc_def, handler) {
-    var npc = new NPC(npc_def, handler);
+Game.prototype.add_npc = function(type) {
+    var npc = NPC.make(type);
     this.npcs[this.next_npc_id++] = npc;
     return npc;
 };

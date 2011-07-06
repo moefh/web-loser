@@ -31,10 +31,11 @@ function Player(npc, collision, keyboard)
     this.weapon_level = 0;
     this.frame = 0;
     this.client_frame = 0;
-    this.npc = npc;
-    this.def = npc.def;
     this.collision = collision;
     this.keyboard = keyboard;
+    this.def = npc.def;
+    this.npc = npc;
+    this.npc.player = this;
 }
 
 /**
@@ -303,7 +304,7 @@ Player.prototype.calc_step = function(game) {
     if (this.keyboard.keyPressed(KEY_SHOOT)) {
         this.shooting = 5;  // # of frames
         var shot_npc_name = this.def.weapons[this.weapon_level][1];
-        var shot = game.add_npc(npc_def[shot_npc_name], npc_behavior[shot_npc_name]);
+        var shot = game.add_npc(shot_npc_name);
         shot.x = this.x + c_int(this.def.clip[2]/2);
         shot.y = this.y + this.def.weapons[this.weapon_level][0] - c_int(shot.def.clip[1]/2);
         shot.dir = this.dir;
