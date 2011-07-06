@@ -102,6 +102,30 @@ var npc_def = {
 	stand : [ 0 ],
 	jump : [ 0 ],
 	walk : [ 0 ]
+    },
+
+    "tele/teleporter" : {
+        image : "teleport",
+        w : 34,
+        h : 33,
+        clip : [ 0, 0, 35, 33 ],
+
+        mirror : 0,
+        stand : [ 0, 1, 2, 3 ],
+        jump : [ 0 ],
+        walk : [ 0 ]
+    },
+
+    "tele/target" : {
+        image : "teletarget",
+        w : 34,
+        h : 33,
+        clip : [ 0, 0, 34, 33 ],
+
+        mirror : 0,
+        stand : [ 0 ],
+        jump : [ 0 ],
+        walk : [ 0 ]
     }
 
 };
