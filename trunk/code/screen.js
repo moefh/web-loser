@@ -133,12 +133,7 @@ Screen.prototype.draw_status = function(obj, images) {
     this.ctx.drawImage(images.get_image('status-bar'), 5, 5);
 };
 
-Screen.prototype.draw = function(images, map, npcs, follow_obj) {
-    var follow_npc = null;
-
-    if ((follow_obj instanceof Player) || (follow_obj instanceof NPC))
-        follow_npc = (follow_obj instanceof Player) ? follow_obj.npc : follow_obj;
-
+Screen.prototype.draw = function(images, map, npcs, follow_npc) {
     // change the screen position to follow a NPC, if necessary
     if (follow_npc != null) {
         var border_w = c_int(0.35*this.w);
@@ -168,7 +163,7 @@ Screen.prototype.draw = function(images, map, npcs, follow_obj) {
     this.draw_map_fg(map);
     if (this.enable_minimap) {
         this.draw_minimap(map, follow_npc);
-        if (follow_obj)
-            this.draw_status(follow_obj, images);
+        if (follow_npc)
+            this.draw_status(follow_npc, images);
     }
 };

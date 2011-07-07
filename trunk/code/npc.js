@@ -12,7 +12,7 @@ NPC.make = function(type) {
     case "punkman":
     case "stickman":
     case "blacknight":
-        npc = new NPCCharacter();
+        npc = new Player();
         break;
 
     case "missile":
@@ -94,21 +94,6 @@ NPC.prototype.step = function(game) {
 NPC.prototype.collects_items = function() {
     return false;
 }
-
-/**
- * Character: an NPC controlled by the player.
- */
-function NPCCharacter() {}
-NPCCharacter.prototype = new NPC();
-
-NPCCharacter.prototype.collects_items = function() {
-    return true;
-}
-
-NPCCharacter.prototype.step = function(game) {
-    this.player.calc_step(game);
-    this.player.move(game.map);
-};
 
 /**
  * Missile
