@@ -122,7 +122,7 @@ Screen.prototype.draw_minimap = function(map, npc) {
 };
 
 Screen.prototype.toggleMiniMap = function(){
-    this.enable_minimap = (this.enable_minimap+1)%2;
+    this.enable_minimap = ! this.enable_minimap;
 };
 
 Screen.prototype.draw_status = function(obj, images) {
