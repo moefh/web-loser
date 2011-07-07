@@ -87,7 +87,7 @@ Game.prototype.externalHandler = function(e){
             this.options.screen_width += 32;
             this.options.screen_height += 24;
             if (! this.options.full_screen)
-                this.browser.growScreen(1);
+                this.browser.scaleScreen(1);
             break;
         case KEY_LESS:
             if (this.options.screen_width > 320)
@@ -95,7 +95,7 @@ Game.prototype.externalHandler = function(e){
             if (this.options.screen_height > 240)
                 this.options.screen_height -= 24;
             if (! this.options.full_screen)
-                this.browser.growScreen(1);
+                this.browser.scaleScreen(1);
             break;
 
         default:

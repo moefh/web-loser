@@ -8,10 +8,10 @@ function Browser(screen, event, options) {
     this.screen = screen;
     this.event = event;
     this.options = options;
-    this.growScreen();
+    this.scaleScreen();
     this.setScalingType();
     
-    $(window).resize($.proxy(this.growScreen, this));
+    $(window).resize($.proxy(this.scaleScreen, this));
     
     var self = this;
     $('#messages').click(function(){
@@ -67,6 +67,8 @@ Browser.prototype.setCenterBoxSize = function(w, h, animate){
             'height': h,
             'marginLeft': -w / 2,
             'marginTop': -h / 2
+        }, {
+            'queue' : false
         });
     } else {
         $('.centerBox').css({
@@ -77,10 +79,10 @@ Browser.prototype.setCenterBoxSize = function(w, h, animate){
         });
     }
 };
-Browser.prototype.growSmallScreen = function(animate){
+Browser.prototype.scaleSmallScreen = function(animate){
     this.setCenterBoxSize(this.options.screen_width, this.options.screen_height, animate);
 };
-Browser.prototype.growFullScreen = function(animate) {
+Browser.prototype.scaleFullScreen = function(animate) {
     var w = $(window).width();
     var h = $(window).height();
     var screenSize = this.screen.getSize();
@@ -93,15 +95,15 @@ Browser.prototype.growFullScreen = function(animate) {
 
     this.setCenterBoxSize(w,h, animate);
 };
-Browser.prototype.growScreen = function(animate){
+Browser.prototype.scaleScreen = function(animate){
     if(this.options.full_screen)
-        this.growFullScreen(animate);
+        this.scaleFullScreen(animate);
     else
-        this.growSmallScreen(animate);
+        this.scaleSmallScreen(animate);
 }
 Browser.prototype.toggleFullScreen = function(){
     this.options.full_screen = ! this.options.full_screen;
-    this.growScreen(1);
+    this.scaleScreen(1);
 };
 Browser.prototype.enableFastScaling = function(){
     $('.centerBox').css({
