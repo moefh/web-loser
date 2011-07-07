@@ -4,14 +4,12 @@
  * @author Guto Motta
  */
 
-var DEFAULT_WIDTH = 640;
-var DEFAULT_HEIGHT = 480;
-
-function Browser(screen, event) {
+function Browser(screen, event, options) {
     this.screen = screen;
     this.event = event;
-    this.fullScreen = 0;
+    this.options = options;
     this.growScreen();
+    this.setScalingType();
     
     $(window).resize($.proxy(this.growScreen, this));
     
@@ -80,7 +78,7 @@ Browser.prototype.setCenterBoxSize = function(w, h, animate){
     }
 };
 Browser.prototype.growSmallScreen = function(animate){
-    this.setCenterBoxSize(DEFAULT_WIDTH, DEFAULT_HEIGHT, animate);
+    this.setCenterBoxSize(this.options.screen_width, this.options.screen_height, animate);
 };
 Browser.prototype.growFullScreen = function(animate) {
     var w = $(window).width();
@@ -96,12 +94,46 @@ Browser.prototype.growFullScreen = function(animate) {
     this.setCenterBoxSize(w,h, animate);
 };
 Browser.prototype.growScreen = function(animate){
-    if(this.fullScreen)
+    if(this.options.full_screen)
         this.growFullScreen(animate);
     else
         this.growSmallScreen(animate);
 }
 Browser.prototype.toggleFullScreen = function(){
-    this.fullScreen = (this.fullScreen+1) % 2;
+    this.options.full_screen = ! this.options.full_screen;
     this.growScreen(1);
+};
+Browser.prototype.enableFastScaling = function(){
+    $('.centerBox').css({
+        'image-rendering': 'optimizeSpeed',
+        '-ms-interpolation-mode': 'nearest-neighbor'
+    });
+    $('.centerBox').css({
+        'image-rendering': 'optimize-contrast'
+    });
+    $('.centerBox').css({
+        'image-rendering': 'crisp-edges'
+    });
+    $('.centerBox').css({
+        'image-rendering': '-moz-crisp-edges'
+    });
+    $('.centerBox').css({
+        'image-rendering': '-webkit-optimize-contrast'
+    });
+}
+Browser.prototype.disableFastScaling = function(){
+    $('.centerBox').css({
+        'image-rendering': 'optimizeQuality',
+        '-ms-interpolation-mode': 'bicubic',
+    });
+};
+Browser.prototype.setScalingType = function(){
+    if (this.options.fast_scaling)
+        this.enableFastScaling();
+    else
+        this.disableFastScaling();
+};
+Browser.prototype.toggleFastScaling = function(){
+    this.options.fast_scaling = ! this.options.fast_scaling;
+    this.setScalingType();
 };

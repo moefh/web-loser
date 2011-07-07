@@ -33,13 +33,14 @@ function Game() {
     this.height = 360;
     this.frame_counter = 0;
     
+    this.options = new Options();
     this.collision = new Collision();
     this.keyboard = new Keyboard();
     this.screen = new Screen(this.width, this.height, document.getElementById('screen'));
     this.images = new Images();
     var errTag = 'ERR';
     this.evt = new Event(errTag, this.error, this);
-    this.browser = new Browser(this.screen, this.evt);
+    this.browser = new Browser(this.screen, this.evt, this.options);
 
     // Bind externalHandler to keydown
     $(document).keydown($.proxy(this.externalHandler, this));
@@ -61,7 +62,11 @@ function Game() {
 Game.prototype.externalHandler = function(e){
     var KEY_SPACE = 32;
     var KEY_F = 70;
+    var KEY_H = 72;
     var KEY_M = 77;
+    var KEY_S = 83;
+    var KEY_GREATER = 190;
+    var KEY_LESS = 188;
     switch(e.keyCode){
         case KEY_SPACE:
             this.togglePause();
@@ -69,10 +74,32 @@ Game.prototype.externalHandler = function(e){
         case KEY_F:
             this.browser.toggleFullScreen();
             break;
+        case KEY_H:
+            this.browser.toggleFastScaling();
+            break;
         case KEY_M:
             this.screen.toggleMiniMap();
+            break;
+        case KEY_S:
+            this.options.save();
+            break;
+        case KEY_GREATER:
+            this.options.screen_width += 32;
+            this.options.screen_height += 24;
+            if (! this.options.full_screen)
+                this.browser.growScreen(1);
+            break;
+        case KEY_LESS:
+            if (this.options.screen_width > 320)
+                this.options.screen_width -= 32;
+            if (this.options.screen_height > 240)
+                this.options.screen_height -= 24;
+            if (! this.options.full_screen)
+                this.browser.growScreen(1);
+            break;
+
         default:
-//            console.log(e.keyCode);
+//           console.log(e.keyCode);
     }
 };
 
