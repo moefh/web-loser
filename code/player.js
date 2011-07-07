@@ -19,23 +19,21 @@ var FRAME_DELAY = 0;
 /**
  * Handle input from the local player (from the keyboard) to control one NPC.
  */
-function Player(npc, collision, keyboard)
+function Player()
 {
+}
+
+Player.prototype.init = function(type) {
+    NPC.prototype.init.call(this, type);
     this.state = PLAYER_ST_JUMP_END;
     this.dir = DIR_RIGHT;
-    this.x = 0;
-    this.y = 0;
     this.dx = 0;
     this.dy = 0;
     this.shooting = 0;
     this.weapon_level = 0;
-    this.frame = 0;
-    this.client_frame = 0;
-    this.collision = collision;
-    this.keyboard = keyboard;
-    this.def = npc.def;
-    this.npc = npc;
-    this.npc.player = this;
+    this.frame_num = 0;
+    this.collision = null;
+    this.keyboard = null;
 }
 
 /**
@@ -59,7 +57,7 @@ Player.prototype.set_state = function(x, y, dir) {
     this.x = x;
     this.y = y;
     this.dir = dir;
-    this.frame = 0;
+    this.frame_num = 0;
     this.dx = this.dy = 0;
 };
 
@@ -70,7 +68,7 @@ Player.prototype.input_stand = function() {
         done_dir = true;
         this.state = PLAYER_ST_JUMP_START;
         this.dy -= MAX_JUMP_SPEED;
-        this.frame = 0;
+        this.frame_num = 0;
     }
 
     if (this.keyboard.keyDown(KEY_RIGHT) && ! done_dir) {
@@ -78,7 +76,7 @@ Player.prototype.input_stand = function() {
         this.state = PLAYER_ST_WALK;
         this.dir = DIR_RIGHT;
         this.dx += DEC_WALK_SPEED + 1;  // also used for walking
-        this.frame = 0;
+        this.frame_num = 0;
     }
 
     if (this.keyboard.keyDown(KEY_LEFT) && ! done_dir) {
@@ -86,7 +84,7 @@ Player.prototype.input_stand = function() {
         this.state = PLAYER_ST_WALK;
         this.dir = DIR_LEFT;
         this.dx -= DEC_WALK_SPEED + 1;  // also used for walking
-        this.frame = 0;
+        this.frame_num = 0;
     }
 
 };
@@ -98,7 +96,7 @@ Player.prototype.input_walk = function() {
         done_dir = true;
         this.state = PLAYER_ST_JUMP_START;
         this.dy -= MAX_JUMP_SPEED;
-        this.frame = 0;
+        this.frame_num = 0;
     }
 
     if (this.keyboard.keyDown(KEY_RIGHT) && ! done_dir) {
@@ -166,31 +164,30 @@ Player.prototype.input_jump_end = function() {
 Player.prototype.fix_frame = function() {
     switch (this.state) {
     case 0:  // PLAYER_ST_STAND
-        this.frame %= this.def.stand.length;
-        this.client_frame = this.def.stand[this.frame];
+        this.frame_num %= this.def.stand.length;
+        this.frame = this.def.stand[this.frame_num];
         break;
 
     case 1:  // PLAYER_ST_WALK
-        this.frame %= this.def.walk.length;
-        this.client_frame = this.def.walk[this.frame];
+        this.frame_num %= this.def.walk.length;
+        this.frame = this.def.walk[this.frame_num];
         if (this.def.shoot_frame && this.shooting > 0)
-            this.client_frame += this.def.shoot_frame;
+            this.frame += this.def.shoot_frame;
         break;
 
     case 2:  // PLAYER_ST_JUMP_START
     case 3:  // PLAYER_ST_JUMP_END
-        this.frame %= this.def.jump.length;
-        this.client_frame = this.def.jump[this.frame];
+        this.frame_num %= this.def.jump.length;
+        this.frame = this.def.jump[this.frame_num];
         break;
 
     default:
+        this.frame_num = 0;
         this.frame = 0;
-        this.client_frame = 0;
     }
 
     if (this.dir == DIR_LEFT)
-        this.client_frame += this.def.mirror;
-    //xconsole.log(" fix_frame: client_frame=" + this.client_frame);
+        this.frame += this.def.mirror;
 };
 
 Player.prototype.apply_floor_friction = function(amount) {
@@ -272,22 +269,10 @@ Player.prototype.move = function(map) {
     }
 
     //console.log("y=" + this.y);
-    this.frame++;
-    this.update_npc();
+    this.frame_num++;
     if (this.shooting > 0)
         this.shooting--;
-};
-
-/**
- * Write updated information (position, etc.) to the NPC that is
- * controlled by the player.
- */
-Player.prototype.update_npc = function() {
     this.fix_frame();
-    this.npc.x = this.x;
-    this.npc.y = this.y;
-    this.npc.dir = this.dir;
-    this.npc.frame = this.client_frame;
 };
 
 /**
@@ -316,3 +301,10 @@ Player.prototype.calc_step = function(game) {
     }
 };
 
+NPC.prototype.collects_items = function() {
+    return true;
+}
+Player.prototype.step = function(game) {
+    this.calc_step(game);
+    this.move(game.map);
+};

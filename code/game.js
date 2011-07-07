@@ -11,6 +11,24 @@ var images_table = [
 
 var game;
 
+/**
+ * Make 'sub' inherit from 'parent'.  This is not very elegant, but
+ * seems to work fine.
+ *
+ * The reason for doing it this way instead of in the definition of
+ * 'sub' (the natural place) is because this way we avoid having to
+ * worry about 'parent' not being loaded during the definition of
+ * 'sub' -- here both are defined.
+ */
+function make_inheritance(sub, parent) {
+    var old_proto = sub.prototype;
+    sub.prototype = new parent();
+    for (var p in old_proto) {
+        if (old_proto.hasOwnProperty(p))
+            sub.prototype[p] = old_proto[p];
+    }
+}
+
 function c_int(val) {
     if (val >= 0)
         return Math.floor(val);
@@ -135,8 +153,9 @@ Game.prototype.reset = function() {
     this.screen.show_message(10, 10, "Loading characters...");
     this.respawn_list = [];
     this.npcs = {};
-    var player_npc = this.add_npc(sel_char);
-    this.player = new Player(player_npc, this.collision, this.keyboard);
+    this.player = this.add_npc(sel_char);
+    this.player.collision = this.collision;
+    this.player.keyboard = this.keyboard;
 
     this.screen.show_message(10, 10, "Loading map...");
     this.map = new Map(sel_map);
@@ -244,5 +263,6 @@ Game.prototype.respawn_npcs = function () {
  * Start game after DOM is loaded
  */
 $(document).ready( function() {
+    make_inheritance(Player, NPC);
     game = new Game();
 });
