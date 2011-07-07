@@ -63,8 +63,8 @@ Browser.prototype.osdClear = function(){
 /**
  * Handles .centerBox class, changing size of main box objects
  */
-Browser.prototype.setCenterBoxSize = function(w, h, animate){
-    if(animate == 1){
+Browser.prototype.setCenterBoxSize = function(w, h, conf){
+    if(typeof(conf) == 'object' && conf.animate == true){
         $('.centerBox').animate({
             width: w,
             height: h,
@@ -82,10 +82,10 @@ Browser.prototype.setCenterBoxSize = function(w, h, animate){
         });
     }
 };
-Browser.prototype.scaleCustomScreen = function(animate){
-    this.setCenterBoxSize(this.options.screen_width, this.options.screen_height, animate);
+Browser.prototype.scaleCustomScreen = function(conf){
+    this.setCenterBoxSize(this.options.screen_width, this.options.screen_height, conf);
 };
-Browser.prototype.scaleFullScreen = function(animate) {
+Browser.prototype.scaleFullScreen = function(conf) {
     var w = $(window).width();
     var h = $(window).height();
     var screenSize = this.screen.getSize();
@@ -96,17 +96,17 @@ Browser.prototype.scaleFullScreen = function(animate) {
     else
         h = Math.round(w / game_aspect);
 
-    this.setCenterBoxSize(w,h, animate);
+    this.setCenterBoxSize(w,h, conf);
 };
-Browser.prototype.scaleScreen = function(animate){
+Browser.prototype.scaleScreen = function(conf){
     if(this.options.full_screen)
-        this.scaleFullScreen(animate);
+        this.scaleFullScreen(conf);
     else
-        this.scaleCustomScreen(animate);
+        this.scaleCustomScreen(conf);
 }
 Browser.prototype.toggleFullScreen = function(){
     this.options.full_screen = ! this.options.full_screen;
-    this.scaleScreen(1);
+    this.scaleScreen({animate: true});
 };
 Browser.prototype.enableFastScaling = function(){
     $('.centerBox').css({
