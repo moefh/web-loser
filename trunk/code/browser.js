@@ -32,12 +32,12 @@ Browser.prototype.osd = function(msg){
     var marginTop = -Math.round($('#msg').height()/2 + padding);
     
     $('#msg').css({
-        'marginLeft' : marginLeft,
-        'marginTop' : marginTop,
-        'padding-left' : padding,
-        'padding-right' : padding,
-        'padding-top' : padding,
-        'padding-bottom' : padding,
+        marginLeft : marginLeft,
+        marginTop : marginTop,
+        paddingLeft : padding,
+        paddingRight : padding,
+        paddingTop : padding,
+        paddingBottom : padding,
     });
 };
 Browser.prototype.osdClear = function(){
@@ -46,15 +46,18 @@ Browser.prototype.osdClear = function(){
     var marginTop = -Math.round($('#msg').height()/2 + padding);
 
     $('#msg').animate({
-        'marginLeft': marginLeft,
-        'marginTop': marginTop,
-        'padding-left' : padding,
-        'padding-right' : padding,
-        'padding-top' : padding,
-        'padding-bottom' : padding,
-        'opacity' : 0
-    }, 'fast', function(){
-        $('#messages').empty();
+        marginLeft: marginLeft,
+        marginTop: marginTop,
+        paddingLeft : padding,
+        paddingRight : padding,
+        paddingTop : padding,
+        paddingBottom : padding,
+        opacity : 0
+    }, {
+        duration: 'fast',
+        complete: function(){
+            $('#messages').empty();
+        }
     });
 };
 /**
@@ -63,23 +66,23 @@ Browser.prototype.osdClear = function(){
 Browser.prototype.setCenterBoxSize = function(w, h, animate){
     if(animate == 1){
         $('.centerBox').animate({
-            'width': w,
-            'height': h,
-            'marginLeft': -w / 2,
-            'marginTop': -h / 2
+            width: w,
+            height: h,
+            marginLeft: -w / 2,
+            marginTop: -h / 2
         }, {
-            'queue' : false
+            queue : false
         });
     } else {
         $('.centerBox').css({
-            'width': w,
-            'height': h,
-            'marginLeft': -w / 2,
-            'marginTop': -h / 2
+            width: w,
+            height: h,
+            marginLeft: -w / 2,
+            marginTop: -h / 2
         });
     }
 };
-Browser.prototype.scaleSmallScreen = function(animate){
+Browser.prototype.scaleCustomScreen = function(animate){
     this.setCenterBoxSize(this.options.screen_width, this.options.screen_height, animate);
 };
 Browser.prototype.scaleFullScreen = function(animate) {
@@ -99,7 +102,7 @@ Browser.prototype.scaleScreen = function(animate){
     if(this.options.full_screen)
         this.scaleFullScreen(animate);
     else
-        this.scaleSmallScreen(animate);
+        this.scaleCustomScreen(animate);
 }
 Browser.prototype.toggleFullScreen = function(){
     this.options.full_screen = ! this.options.full_screen;
@@ -107,25 +110,25 @@ Browser.prototype.toggleFullScreen = function(){
 };
 Browser.prototype.enableFastScaling = function(){
     $('.centerBox').css({
-        'image-rendering': 'optimizeSpeed',
+        imageRendering: 'optimizeSpeed',
         '-ms-interpolation-mode': 'nearest-neighbor'
     });
     $('.centerBox').css({
-        'image-rendering': 'optimize-contrast'
+        imageRendering: 'optimize-contrast'
     });
     $('.centerBox').css({
-        'image-rendering': 'crisp-edges'
+        imageRendering: 'crisp-edges'
     });
     $('.centerBox').css({
-        'image-rendering': '-moz-crisp-edges'
+        imageRendering: '-moz-crisp-edges'
     });
     $('.centerBox').css({
-        'image-rendering': '-webkit-optimize-contrast'
+        imageRendering: '-webkit-optimize-contrast'
     });
 }
 Browser.prototype.disableFastScaling = function(){
     $('.centerBox').css({
-        'image-rendering': 'optimizeQuality',
+        imageRendering: 'optimizeQuality',
         '-ms-interpolation-mode': 'bicubic',
     });
 };
