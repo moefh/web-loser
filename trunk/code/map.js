@@ -3,9 +3,10 @@
  * easy-to-use bitmap specifying which sub-blocks are blocking. */
 var map_clip_conv = [ 15, 1, 2, 4, 8, 3, 5, 10, 12, 14, 13, 11, 7, 9, 6, 0 ];
 
-function Map(name)
+function Map(name, collision)
 {
     this.name = name;
+    this.collision = collision;
     this.image = null;
     this.bg_image = null;
     this.w = 0;

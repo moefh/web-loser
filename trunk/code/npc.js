@@ -31,6 +31,10 @@ NPC.make = function(type) {
         npc = new NPCTeleporter();
         break;
 
+    case "loser-shadow":
+        npc = new Enemy();
+        break;
+
     default:
         npc = new NPC();
         break;

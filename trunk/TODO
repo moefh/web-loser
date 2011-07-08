@@ -32,3 +32,24 @@ Some kind of multiplayer involving a server.
 Current maps are exported from the original maps using maps/src/conv.
 The original map editor is awful, we should make a new one.
 
+
+*) Enemy AI
+
+Implement some kind of enemy AI.
+
+There are two possible ways to do enemy AI (enemy.js, calc_step()).
+
+  1) make the AI calculate the necessary key state to order the
+     character to act, like a human player does.
+
+  2) override the step() method to calculate the enemy's position and
+     frame directly, create shots, etc.  Care must be taken to make the
+     enemy movement and animation fluid.
+
+Note that each enemy type may be implemented in a different way. To
+create new enemy type:
+
+  - create a new NPC type in data/npc_defs.js
+  - change a map to use the new enemy type
+  - create a new class (derived from NPC or character) to implement the AI
+  - update NPC.make() in npc.js to use your new class for the new NPC type

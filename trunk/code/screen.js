@@ -162,6 +162,17 @@ Screen.prototype.draw = function(images, map, npcs, follow_npc) {
     this.draw_npcs(images, npcs, follow_npc);
     this.draw_map_fg(map);
     if (this.enable_minimap) {
+        if (false) {
+            // draw every NPC as a red dot in the minimap
+            var mmx = this.w - 2*map.w - 5;
+            var mmy = this.h - 2*map.h - 5;
+            this.ctx.fillStyle = "#ff3f3f";
+            for (var i in npcs) {
+                var n = npcs[i];
+                this.ctx.fillRect(mmx + c_int(n.x/32), mmy + c_int(n.y/32), 2, 2);
+            }
+        }
+
         this.draw_minimap(map, follow_npc);
         if (follow_npc)
             this.draw_status(follow_npc, images);
