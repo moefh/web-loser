@@ -154,11 +154,10 @@ Game.prototype.reset = function() {
     this.respawn_list = [];
     this.npcs = {};
     this.player = this.add_npc(sel_char);
-    this.player.collision = this.collision;
     this.player.keyboard = this.keyboard;
 
     this.screen.show_message(10, 10, "Loading map...");
-    this.map = new Map(sel_map);
+    this.map = new Map(sel_map, this.collision);
 
     var loadTag = 'MAP_LOADED';
     this.evt.bind(loadTag, this.start, this);
@@ -263,6 +262,8 @@ Game.prototype.respawn_npcs = function () {
  * Start game after DOM is loaded
  */
 $(document).ready( function() {
-    make_inheritance(Player, NPC);
+    make_inheritance(Character, NPC);
+    make_inheritance(Enemy, Character);
+    make_inheritance(Player, Character);
     game = new Game();
 });

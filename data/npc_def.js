@@ -126,6 +126,25 @@ var npc_def = {
         stand : [ 0 ],
         jump : [ 0 ],
         walk : [ 0 ]
+    },
+
+    "loser-shadow" : {
+        image : "loser-sh",
+        w : 51,
+        h : 40,
+        clip : [ 15, 5, 31, 35 ],
+
+        mirror : 11,
+        stand : [ 10 ],
+        jump : [ 4 ],
+        walk : [
+            5, 5, 6, 6, 7, 7, 8, 8, 9, 9, 8, 8, 7, 7, 6, 6, 5, 5,
+            0, 0, 1, 1, 2, 2, 3, 3, 4, 4, 3, 3, 2, 2, 1, 1, 0, 0
+        ],
+
+        weapons : [
+            [ 5, "missile" ]
+        ]
     }
 
 };
