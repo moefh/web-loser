@@ -301,9 +301,14 @@ Player.prototype.calc_step = function(game) {
     }
 };
 
-NPC.prototype.collects_items = function() {
+NPC.prototype.can_collect_items = function() {
     return true;
 }
+
+NPC.prototype.can_teleport = function() {
+    return true;
+}
+
 Player.prototype.step = function(game) {
     this.calc_step(game);
     this.move(game.map);
