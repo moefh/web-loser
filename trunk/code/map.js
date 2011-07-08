@@ -167,13 +167,22 @@ Map.prototype.load_parse = function(data, game, images, events, tag) {
         this.minimap = this.build_minimap();
         
         // insert all NPCs from the map that are part of npc_def into Game
+        var map_npcs = {};
         for (var i in data.objects) {
             if (data.objects[i].npc in npc_def) {
                 var npc = game.add_npc(data.objects[i].npc);
                 npc.x = data.objects[i].x;
                 npc.y = data.objects[i].y;
                 npc.respawn = data.objects[i].respawn;
+                map_npcs[i] = {
+                    npc : npc,
+                    target : data.objects[i].target
+                };
             }
+        }
+        for (var i in map_npcs) {
+            if (map_npcs[i].target >= 0)
+                map_npcs[i].npc.target = map_npcs[map_npcs[i].target].npc;
         }
     }
     catch (e) {

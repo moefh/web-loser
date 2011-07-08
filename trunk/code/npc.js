@@ -91,7 +91,11 @@ NPC.prototype.collides_with = function (other) {
 NPC.prototype.step = function(game) {
 };
 
-NPC.prototype.collects_items = function() {
+NPC.prototype.can_collect_items = function() {
+    return false;
+}
+
+NPC.prototype.can_teleport = function() {
     return false;
 }
 
@@ -125,7 +129,7 @@ NPCEnergy.prototype.step = function(game) {
     this.y = this.start_y + c_int(4 * Math.cos(t));
 
     for (var i in game.npcs) {
-        if (!(game.npcs[i] === this) && game.npcs[i].collects_items() && this.collides_with(game.npcs[i])) {
+        if (!(game.npcs[i] === this) && game.npcs[i].can_collect_items() && this.collides_with(game.npcs[i])) {
             game.remove_npc(this);
             // TODO: add energy to player
         }
@@ -154,8 +158,15 @@ function NPCTeleporter() {}
 NPCTeleporter.prototype = new NPC();
 
 NPCTeleporter.prototype.step = function(game) {
-    var t = 2 * Math.PI * ((game.frame_counter % 22) / 22);
-    this.frame = c_int(1.55 + 1.55 * Math.cos(t));
+    if (this.target) {
+        var t = 2 * Math.PI * ((game.frame_counter % 22) / 22);
+        this.frame = c_int(1.55 + 1.55 * Math.cos(t));
 
-    // TODO: check and teleport player to target
+        for (var i in game.npcs) {
+            if (!(game.npcs[i] === this) && game.npcs[i].can_teleport() && this.collides_with(game.npcs[i])) {
+                game.npcs[i].x = this.target.x;
+                game.npcs[i].y = this.target.y;
+            }
+        }
+    }
 };
