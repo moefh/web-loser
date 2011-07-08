@@ -301,11 +301,11 @@ Player.prototype.calc_step = function(game) {
     }
 };
 
-NPC.prototype.can_collect_items = function() {
+Player.prototype.can_collect_items = function() {
     return true;
 }
 
-NPC.prototype.can_teleport = function() {
+Player.prototype.can_teleport = function() {
     return true;
 }
 
