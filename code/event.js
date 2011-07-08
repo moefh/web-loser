@@ -5,8 +5,6 @@
  * Constructor prepares for special ERROR event
  */
 function Event(errTag, errHandler, errObj) {
-    var errTag;
-
     this.errTag = errTag;
     this.bind(errTag, errHandler, errObj);
 }
