@@ -67,18 +67,14 @@ Browser.prototype.setCenterBoxSize = function(w, h, conf){
     if(typeof(conf) == 'object' && conf.animate == true){
         $('.centerBox').animate({
             width: w,
-            height: h,
-            marginLeft: -w / 2,
-            marginTop: -h / 2
+            height: h
         }, {
             queue : false
         });
     } else {
         $('.centerBox').css({
             width: w,
-            height: h,
-            marginLeft: -w / 2,
-            marginTop: -h / 2
+            height: h
         });
     }
 };
