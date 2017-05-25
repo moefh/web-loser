@@ -4,7 +4,7 @@ function Options()
     // default options
     this.screen_width = 640;
     this.screen_height = 480;
-    this.full_screen = false;
+    this.full_screen = true;
     this.fast_scaling = false;
 
     this.load();
