@@ -8,7 +8,7 @@ although blue stars (teleports) work.
 
 ## Demo
 
-Run it [here](https://ricardo-massaro.github.io/web-loser/).
+Run it [here](https://moefh.github.io/web-loser/).
 
 Controls:
 
